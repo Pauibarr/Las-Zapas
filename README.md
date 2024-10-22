@@ -25,3 +25,11 @@ Quito el contenido del index.css y App.css.Y añado contenido del tailwind al in
     @tailwind components;
     @tailwind utilities;
 
+- Instalo material tailwind
+    npm i @material-tailwind/react
+
+    edito tailwind.config.js:
+        Añado el const withMT = require("@material-tailwind/react/utils/withMT");
+        sustituyo el export default{} por module.exports = withMT({})
+
+- instalo npm i react-icons
