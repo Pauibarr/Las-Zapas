@@ -2,12 +2,13 @@ import { Button, Card, CardBody, CardFooter, Dialog, Typography, Input} from "@m
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export const Login = () => {
+export const Registro = () => {
+
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen((open) => !open);
     return(
       <>
-      <Button onClick={handleOpen}>Login</Button>
+      <Button onClick={handleOpen}>Registro</Button>
       <Dialog size="xs" open={open} handler={handleOpen} className="bg-transparent shadow-none">
       <div className="card bg-blue-400 shadow-lg  w-full h-full rounded-3xl absolute  transform -rotate-6"></div>
       <div className="card bg-red-400 shadow-lg  w-full h-full rounded-3xl absolute  transform rotate-6"></div>
@@ -26,9 +27,9 @@ export const Login = () => {
             <CardFooter className="pt-0">
               <Button variant="gradient" fullWidth type="submit">Login</Button>
               <Typography variant="small" className="mt-4 flex justify-center">
-                ¿Eres nuevo cliente?
+                ¿Ya eres cliente?
               </Typography>
-              <Link to="/registro"><Button color="white" size="lg" fullWidth type="submit">Registro</Button></Link>
+              <Link to="/login"><Button color="white" size="lg" fullWidth type="submit">Login</Button></Link>
             </CardFooter>
           </form>
         </Card>
