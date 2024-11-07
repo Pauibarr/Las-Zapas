@@ -13,7 +13,7 @@ export const Footer = () => {
               </li>
               <li>
                 <a href="/terms" className="hover:text-gray-400">
-                  Terms of Service
+                  Terms of Services
                 </a>
               </li>
             </ul>
