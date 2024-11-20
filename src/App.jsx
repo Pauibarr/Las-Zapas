@@ -7,6 +7,7 @@ import { Hombre } from './views/Hombre'
 import { Mujer } from './views/Mujer'
 import { Login } from './components/Login'
 import { Registro } from './components/Registro'
+import { Usuarios } from './components/Usuarios'
 
 export default function App() {
 
@@ -20,6 +21,7 @@ export default function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/hombre' element={<Hombre />} />
         <Route path='/mujer' element={<Mujer />} />
+        <Route path='/usuarios' element={<Usuarios />} />
         <Route path='/footer' element={<Footer />} />
       </Routes>
     <Footer/>
