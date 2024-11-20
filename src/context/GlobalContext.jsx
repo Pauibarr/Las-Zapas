@@ -1,10 +1,17 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../bd/supabase";
 
-export function GlobalContext(children){
-    const [session, setSession] = useState(null);
+export const GlobalContext = createContext();
 
+export const GlobalProvider = ({ children }) => {
+    const [session, setSession] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
+
+    // Estado para controlar popups
+    const [activePopup, setActivePopup] = useState(null); // "login" o "registro"
+
+    // Manejo de popups
+    const openPopup = (popup) => setActivePopup(popup);
 
     useEffect(() => {
         const checkSession = async () => {
@@ -30,7 +37,6 @@ export function GlobalContext(children){
             }
         });
 
-        //fetchUserRole sirve para que ua persona se registre con un correo en específico se vuelva automaticamente Admin
         const fetchUserRole = async (userEmail) => {
             if (userEmail === 'paulones21052002@gmail.com') {
                 setIsAdmin(true);
@@ -54,9 +60,17 @@ export function GlobalContext(children){
     }, []);
 
     return (
-        <GlobalContext.Provider value={{ session, isAdmin, setSession, setIsAdmin }}>
+        <GlobalContext.Provider value={{
+            session,
+            isAdmin,
+            setSession,
+            setIsAdmin,
+            activePopup,
+            openPopup
+        }}>
             {children}
         </GlobalContext.Provider>
     );
-    
-}
+};
+
+export const useGlobalContext = () => useContext(GlobalContext);

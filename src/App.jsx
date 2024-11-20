@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
@@ -9,8 +8,7 @@ import { Mujer } from './views/Mujer'
 import { Login } from './components/Login'
 import { Registro } from './components/Registro'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
 
   return (
     <>
@@ -29,5 +27,3 @@ function App() {
     </>
   )
 }
-
-export default App
