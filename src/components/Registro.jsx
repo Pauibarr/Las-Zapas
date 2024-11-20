@@ -38,7 +38,7 @@ export const Registro = () => {
             // Luego creamos el perfil en la base de datos
             const uid = data.user.id;
             const role = data.user.email === 'paulones21052002@gmail.com' ? 'admin' : 'user';
-            let { error: profileError } = await supabase.from('Profiles').insert([{
+            let { error: profileError } = await supabase.from('Usuarios').insert([{
                 uid: uid,
                 email: data.user.email,
                 name_user: dialogData.name,

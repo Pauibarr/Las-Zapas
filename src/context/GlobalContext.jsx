@@ -43,7 +43,7 @@ export const GlobalProvider = ({ children }) => {
                 return;
             }
             const { data, error } = await supabase
-                .from('Profiles')
+                .from('Usuarios')
                 .select('role')
                 .eq('email', userEmail)
                 .single();
