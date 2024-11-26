@@ -1,8 +1,10 @@
+import { Link } from "react-router-dom"
+
 export function Mujer(){
 
     return(
         <div>
-            <Link to="/hombre">
+            <Link to="/mujer">
             <ul>
                 <li>
                     Zapatillas
