@@ -24,7 +24,7 @@ export function Hombre(){
     
       const handleOpen = (zapatoDeVestirHombre) => {
         setSelectedZapatoDeVestirHombre(zapatoDeVestirHombre);
-        activePopup(true);
+        openPopup(true);
       };
     
       const handleOpenN = () => {
@@ -42,11 +42,11 @@ export function Hombre(){
       const handleOpenEdit = (zapatoDeVestirHombre) => {
         setEditZapatoDeVestirHombre(zapatoDeVestirHombre);
         setNewZapatoDeVestirHombre({
-          nombre: zapatoDeVestirHombre.nombre,
-          descripcion: zapatoDeVestirHombre.descripcion,
-          talla: zapatoDeVestirHombre.talla,
-          imagen: zapatoDeVestirHombre.imagen,
-          precio: zapatoDeVestirHombre.precio
+          nombre: zapatoDeVestirHombre.nombre || '',
+          descripcion: zapatoDeVestirHombre.descripcion || '',
+          talla: zapatoDeVestirHombre.talla || '',
+          imagen: zapatoDeVestirHombre.imagen || '',
+          precio: zapatoDeVestirHombre.precio || ''
         });
         openPopup('editZapato');
       };
@@ -94,7 +94,7 @@ export function Hombre(){
               setZapatosDeVestirHombre(zapatosDeVestirHombre.map(zapatoDeVestirHombre => (zapatoDeVestirHombre.id === editZapatoDeVestirHombre.id ? data[0] : zapatoDeVestirHombre)));
               setNewZapatoDeVestirHombre({ nombre: '', descripcion: '', talla: '', imagen: '', precio: '',});
               setEditZapatoDeVestirHombre(null);
-              setOpenN(false);
+              // setOpenN(false);
             } catch (error) {
               console.error('Error updating painting:', error.message);
             }
@@ -119,7 +119,7 @@ export function Hombre(){
             }
             setZapatosDeVestirHombre([...zapatosDeVestirHombre, data[0]]);
             setNewZapatoDeVestirHombre({ nombre: '', descripcion: '', talla: '', image: '', precio: '',});
-            setOpenN(false);
+            // setOpenN(false);
           } catch (error) {
             console.error('Error adding painting:', error.message);
           }
@@ -132,19 +132,19 @@ export function Hombre(){
             {zapatosDeVestirHombre.map(zapatoDeVestirHombre => (
               <div key={zapatoDeVestirHombre.id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full">
                 <button className="w-full transition duration-150 hover:scale-x-105 hover:scale-y-105">
-                  <img onClick={() => handleOpen(zapatoDeVestirHombre)} src={zapatoDeVestirHombre.image} alt={zapatoDeVestirHombre.nombre} className="w-full h-48 object-cover mb-4 rounded-md" />
+                  <img onClick={() => handleOpen(zapatoDeVestirHombre)} src={zapatoDeVestirHombre.imagen} alt={zapatoDeVestirHombre.nombre} className="w-full h-48 object-cover mb-4 rounded-md" />
                 </button>
                 <Dialog
                   size="xs"
-                  open={open && selectedZapatoDeVestirHombre === zapatoDeVestirHombre}
+                  open={activePopup && selectedZapatoDeVestirHombre === zapatoDeVestirHombre}
                   handler={handleOpen}
                   className="bg-transparent shadow-none"
                 >
-                  <img src={selectedZapatoDeVestirHombre?.image} alt={selectedZapatoDeVestirHombre?.name} className="w-full mb-4 rounded-md" />
+                  <img src={selectedZapatoDeVestirHombre?.imagen} alt={selectedZapatoDeVestirHombre?.nombre} className="w-full mb-4 rounded-md" />
                 </Dialog>
                 <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoDeVestirHombre.nombre}</h2>
                 <div className="flex flex-col flex-grow">
-                  <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{zapatoDeVestirHombre.descripcion}</p>
+                  <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">Descripcion: {zapatoDeVestirHombre.descripcion}</p>
                   <p className="text-blue-gray-600 dark:text-blue-gray-100 mn-2">Talla: {zapatoDeVestirHombre.talla}</p>
                   <p className="text-blue-gray-600 dark:text-blue-gray-100">Precio: {zapatoDeVestirHombre.precio}</p>
                 </div>
@@ -172,23 +172,59 @@ export function Hombre(){
                 <Typography variant="h4">{editZapatoDeVestirHombre ? 'Edit Painting' : 'Add New Painting'}</Typography>
                 {/* Form fields */}
                 <Input
-                  label="Name"
+                  label="Nombre"
                   size="lg"
                   color="blue-gray"
-                  name="name"
+                  name="nombre"
                   required
-                  value={newZapatoDeVestirHombre.name}
+                  value={newZapatoDeVestirHombre.nombre}
                   onChange={handleChange}
                   className="dark:text-gray-300"
                 />
                 <Input
-                  label="Description"
+                  label="Imagen"
                   size="lg"
                   color="blue-gray"
-                  name="description"
+                  name="imagen"
                   required
-                  value={newZapatoDeVestirHombre.description}
+                  value={newZapatoDeVestirHombre.imagen}
                   onChange={handleChange}
+                  className="dark:text-gray-300"
+                />
+                <Input
+                  label="Descripcion"
+                  size="lg"
+                  color="blue-gray"
+                  name="descripcion"
+                  required
+                  value={newZapatoDeVestirHombre.descripcion}
+                  onChange={handleChange}
+                  className="dark:text-gray-300"
+                />
+                <Input
+                  label="Talla"
+                  size="lg"
+                  color="blue-gray"
+                  name="talla"
+                  required
+                  value={newZapatoDeVestirHombre.talla}
+                  onChange={handleChange}
+                  className="dark:text-gray-300"
+                />
+                <Input
+                  label="Precio"
+                  size="lg"
+                  color="blue-gray"
+                  name="precio"
+                  required
+                  value={newZapatoDeVestirHombre.precio}
+                  onChange={(e) => {
+                    const inputValue = e.target.value;
+                    setNewZapatoDeVestirHombre((prev) => ({
+                      ...prev,
+                      precio: inputValue ? `${inputValue} €` : "", // Agrega "€" al final
+                    }));
+                  }}
                   className="dark:text-gray-300"
                 />
                 {/* Otros campos de entrada */}

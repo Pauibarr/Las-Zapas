@@ -12,7 +12,7 @@ export const GlobalProvider = ({ children }) => {
 
     // Manejo de popups
     const openPopup = (popup) => setActivePopup(popup);
-    const closePopup = () => setActivePopup(null);
+    const closePopup = () => setActivePopup(false);
 
     useEffect(() => {
         const checkSession = async () => {
