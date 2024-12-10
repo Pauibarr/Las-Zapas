@@ -1,8 +1,8 @@
 import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@material-tailwind/react';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '../bd/supaBase';
-import { useGlobalContext } from '../context/globalContext';
+import { supabase } from '../bd/supabase';
+import { useGlobalContext } from '../context/GlobalContext';
 
 export function Hombre(){
 
