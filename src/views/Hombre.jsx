@@ -126,7 +126,7 @@ export function Hombre(){
         };
 
     return(
-        <div className="container mx-auto py-8 pb-16 relative">
+        <div className="container mx-auto py-20 pb-16">
           <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">Zapatos de Vestir</h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {zapatosDeVestirHombre.map(zapatoDeVestirHombre => (
@@ -220,9 +220,12 @@ export function Hombre(){
                   value={newZapatoDeVestirHombre.precio}
                   onChange={(e) => {
                     const inputValue = e.target.value;
+
+                    const numericValue = inputValue.replace(/\D/g, "");// Permitir solo números
+
                     setNewZapatoDeVestirHombre((prev) => ({
                       ...prev,
-                      precio: inputValue ? `${inputValue} €` : "", // Agrega "€" al final
+                      precio: numericValue ? `${numericValue} €` : "", // Agrega "€" al final
                     }));
                   }}
                   className="dark:text-gray-300"
