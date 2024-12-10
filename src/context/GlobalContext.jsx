@@ -4,11 +4,13 @@ import { supabase } from "../bd/supabase";
 export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+
+    // Estado para la sesión y el rol de usuario
     const [session, setSession] = useState(null);
     const [isAdmin, setIsAdmin] = useState(false);
 
     // Estado para controlar popups
-    const [activePopup, setActivePopup] = useState(null); // "login" o "registro"
+    const [activePopup, setActivePopup] = useState(null); // "login", "registro", etc
 
     // Manejo de popups
     const openPopup = (popup) => setActivePopup(popup);
@@ -59,6 +61,11 @@ export const GlobalProvider = ({ children }) => {
             authListener.subscription.unsubscribe();
         };
     }, []);
+
+
+
+
+
 
     return (
         <GlobalContext.Provider value={{
