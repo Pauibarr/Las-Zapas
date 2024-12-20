@@ -6,7 +6,7 @@ import { useGlobalContext } from '../context/GlobalContext';
 
 export function Hombre(){
 
-    const { activePopup, openPopup, closePopup } = useGlobalContext();  // Obtenemos el contexto
+    const { activePopup, openPopup, closePopup, newZapatoBota, setNewZapatoBota, handleOpenPut } = useGlobalContext();  // Obtenemos el contexto
     const [selectedZapatoDeVestirHombre, setSelectedZapatoDeVestirHombre] = useState(null);
 
     const { isAdmin } = useGlobalContext();
@@ -27,7 +27,7 @@ export function Hombre(){
         openPopup(true);
       };
     
-      const handleOpenN = () => {
+      const handleOpenN = () => { //putZapatoBota
         setEditZapatoDeVestirHombre(null);
         setNewZapatoDeVestirHombre({
           nombre: '',
@@ -81,7 +81,7 @@ export function Hombre(){
         }
       };
     
-        const handleEditSubmit = async (e) => {
+        const handleEditSubmit = async (e) => { //editTableData
             e.preventDefault();
             try {
             const { data, error } = await supabase.from('ZapatosDeVestirHombre').update(newZapatoDeVestirHombre).eq('id', editZapatoDeVestirHombre.id).select();
@@ -91,7 +91,7 @@ export function Hombre(){
               if (!data || data.length === 0) {
                 throw new Error('Update failed, no data returned.');
               }
-              setZapatosDeVestirHombre(zapatosDeVestirHombre.map(zapatoDeVestirHombre => (zapatoDeVestirHombre.id === editZapatoDeVestirHombre.id ? data[0] : zapatoDeVestirHombre)));
+              setZapatosDeVestirHombre(zapatosDeVestirHombre.map(zapatoDeVestirHombre => (zapatoDeVestirHombre.id === editZapatoDeVestirHombre.id ? data[0] : zapatoDeVestirHombre)));// setTableData
               setNewZapatoDeVestirHombre({ nombre: '', descripcion: '', talla: '', imagen: '', precio: '',});
               setEditZapatoDeVestirHombre(null);
               // setOpenN(false);

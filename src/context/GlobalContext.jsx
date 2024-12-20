@@ -1,81 +1,230 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../bd/supabase";
 
-export const GlobalContext = createContext();
+const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+    const [activePopup, setActivePopup] = useState(null); // Manejo de popups
+    const [session, setSession] = useState(null); // Sesión actual del usuario
+    const [userData, setUserData] = useState(null); // Datos del usuario
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [editData,setEditData] = useState(null);
+    const [error, setError] = useState(null); // Manejo de errores
+    const [tableData, setTableData] = useState({}); // Datos de las tablas (cache)
 
-    // Estado para la sesión y el rol de usuario
-    const [session, setSession] = useState(null);
-    const [isAdmin, setIsAdmin] = useState(false);
+    const openPopup = (popupName) => setActivePopup(popupName); // Cambiar popup activo
 
-    // Estado para controlar popups
-    const [activePopup, setActivePopup] = useState(null); // "login", "registro", etc
-
-    // Manejo de popups
-    const openPopup = (popup) => setActivePopup(popup);
-    const closePopup = () => setActivePopup(false);
+    const [newZapatoBota, setNewZapatoBota] = useState({
+        nombre: "",
+        descripcion: "",
+        talla: "",
+        imagen: "",
+        precio: "",
+    });
 
     useEffect(() => {
-        const checkSession = async () => {
+        const fetchSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                setSession(session);
-                fetchUserRole(session.user.email);
-            } else {
-                setSession(null);
-                setIsAdmin(false);
+            setSession(session);
+            if (session?.user) {
+                fetchUserData(session.user.id);
             }
         };
+        fetchSession();
 
-        checkSession();
-
-        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
             if (session?.user) {
-                setSession(session);
-                fetchUserRole(session.user.email);
+                fetchUserData(session.user.id);
             } else {
-                setSession(null);
-                setIsAdmin(false);
+                setUserData(null);
             }
         });
 
-        const fetchUserRole = async (userEmail) => {
-            if (userEmail === 'paulones21052002@gmail.com') {
-                setIsAdmin(true);
-                return;
-            }
-            const { data, error } = await supabase
-                .from('Usuarios')
-                .select('role')
-                .eq('email', userEmail)
-                .single();
-            if (data) {
-                setIsAdmin(data.role === 'admin');
-            } else if (error) {
-                console.error('Error fetching user role:', error);
-            }
-        };
-
-        return () => {
-            authListener.subscription.unsubscribe();
-        };
+        return () => subscription.unsubscribe();
     }, []);
 
+    const fetchUserData = async (uid) => {
+        try {
+            let { data, error } = await supabase
+                .from("Usuarios")
+                .select("*")
+                .eq("uid", uid)
+                .single();
 
+            if (error) throw error;
+            setUserData(data);
+        } catch (error) {
+            console.error("Error fetching user data:", error.message);
+            setError(error.message);
+        }
+    };
 
+    const fetchTableData = async (tableName) => {
+        if (tableData[tableName]) {
+            return tableData[tableName];
+        }
 
+        try {
+            const { data, error } = await supabase.from(tableName).select("*");
+            if (error) throw error;
+            setTableData((prev) => ({ ...prev, [tableName]: data }));
+            return data;
+        } catch (error) {
+            console.error(`Error fetching data from ${tableName}:`, error.message);
+            setError(error.message);
+            return [];
+        }
+    };
 
+    const handleOpen = (item, popupName) => {
+        setSelectedItem(item);
+        openPopup(popupName);
+    };
+
+    const editTableData = async (tableName, id, updates) => {
+        try {
+            const { data, error } = await supabase
+                .from(tableName)
+                .update(updates)
+                .eq("id", id)
+                .select();
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+                throw new Error("Update failed, no data returned.");
+            }
+
+            setTableData((prev) => {
+                const updatedTable = prev[tableName]?.map((item) =>
+                    item.id === id ? data[0] : item
+                );
+                return { ...prev, [tableName]: updatedTable };
+            });
+
+            return data[0];
+        } catch (error) {
+            console.error(`Error updating data in ${tableName}:`, error.message);
+            setError(error.message);
+        }
+    };
+
+    const handleOpenEdit = (item, tableName, popupName) => {
+        setEditData(item); // Guarda el objeto actual en edición.
+        setTableData((prev) => ({
+            ...prev,
+            [tableName]: prev[tableName]?.map((data) =>
+                data.id === item.id ? { ...data, ...item } : data
+            ),
+        }));
+        openPopup(popupName); // Abre el popup correspondiente.
+    };    
+
+    const putZapatoBota = () => {
+        setNewZapatoBota({
+            nombre: "",
+            descripcion: "",
+            talla: "",
+            imagen: "",
+            precio: "",
+        })
+    }
+
+    const handleOpenPut = () => {
+        putZapatoBota();
+        openPopup("newZapatoBota");
+    }
+
+    const handleSubmit = async (tableName, newItem) => {
+        try {
+            const { data, error } = await supabase.from(tableName).insert([newItem]).select();
+            if (error) throw error;
+    
+            if (!data || data.length === 0) {
+                throw new Error("Insert failed, no data returned.");
+            }
+    
+            // Actualizar la cache local con el nuevo dato
+            setTableData((prev) => ({
+                ...prev,
+                [tableName]: [...(prev[tableName] || []), data[0]],
+            }));
+    
+            // Limpia el formulario y cierra el popup si es necesario
+            setNewZapatoBota({
+                nombre: "",
+                descripcion: "",
+                talla: "",
+                imagen: "",
+                precio: "",
+            });
+    
+            openPopup(null); // Cierra el popup activo
+        } catch (error) {
+            console.error(`Error adding item to ${tableName}:`, error.message);
+            setError(error.message);
+        }
+    };
+    
+
+    const deleteTableData = async (tableName, id) => {
+        try {
+            const { error } = await supabase.from(tableName).delete().eq("id", id);
+            if (error) throw error;
+
+            setTableData((prev) => {
+                const updatedTable = prev[tableName]?.filter((item) => item.id !== id);
+                return { ...prev, [tableName]: updatedTable };
+            });
+        } catch (error) {
+            console.error(`Error deleting data from ${tableName}:`, error.message);
+            setError(error.message);
+        }
+    };
+
+    const handleChange = (editZapatoBota) => {
+        const { name, value } = editZapatoBota.target;
+        setNewZapatoBota((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const logout = async () => {
+        try {
+            await supabase.auth.signOut();
+            setSession(null);
+            setUserData(null);
+        } catch (error) {
+            console.error("Error logging out:", error.message);
+            setError(error.message);
+        }
+    };
 
     return (
         <GlobalContext.Provider value={{
-            session,
-            isAdmin,
-            setSession,
-            setIsAdmin,
             activePopup,
             openPopup,
-            closePopup
+            session,
+            setSession,
+            userData,
+            fetchUserData,
+            fetchTableData,
+            selectedItem,
+            handleOpen,
+            editTableData,
+            editData,
+            setEditData,
+            handleOpenEdit,
+            newZapatoBota,
+            setNewZapatoBota,
+            handleOpenPut,
+            handleSubmit,
+            deleteTableData,
+            handleChange,
+            logout,
+            error,
         }}>
             {children}
         </GlobalContext.Provider>
