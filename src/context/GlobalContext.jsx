@@ -30,9 +30,10 @@ export const GlobalProvider = ({ children }) => {
                 fetchUserData(session.user.id);
             }
         };
+
         fetchSession();
 
-        const { subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+        const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             if (session?.user) {
                 fetchUserData(session.user.id);
@@ -41,7 +42,12 @@ export const GlobalProvider = ({ children }) => {
             }
         });
 
-        return () => subscription.unsubscribe();
+        // Limpieza: verifica si existe `subscription` antes de usar `unsubscribe`.
+        return () => {
+            if (subscription && subscription.unsubscribe) {
+                subscription.unsubscribe();
+            }
+        };
     }, []);
 
     const fetchUserData = async (uid) => {
