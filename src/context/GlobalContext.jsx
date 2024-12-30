@@ -7,6 +7,7 @@ export const GlobalProvider = ({ children }) => {
     const [activePopup, setActivePopup] = useState(null); // Manejo de popups
     const [session, setSession] = useState(null); // Sesión actual del usuario
     const [userData, setUserData] = useState(null); // Datos del usuario
+    const [isAdmin, setIsAdmin] = useState(false); // Indica si el usuario es administrador
     const [selectedItem, setSelectedItem] = useState(null);
     const [editData,setEditData] = useState(null);
     const [error, setError] = useState(null); // Manejo de errores
@@ -39,6 +40,7 @@ export const GlobalProvider = ({ children }) => {
                 fetchUserData(session.user.id);
             } else {
                 setUserData(null);
+                setIsAdmin(false);
             }
         });
 
@@ -60,6 +62,7 @@ export const GlobalProvider = ({ children }) => {
 
             if (error) throw error;
             setUserData(data);
+            setIsAdmin(data.role === 'admin');
         } catch (error) {
             console.error("Error fetching user data:", error.message);
             setError(error.message);
@@ -217,6 +220,7 @@ export const GlobalProvider = ({ children }) => {
             userData,
             fetchUserData,
             fetchTableData,
+            isAdmin,
             selectedItem,
             handleOpen,
             editTableData,

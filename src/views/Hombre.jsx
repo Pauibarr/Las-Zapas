@@ -6,9 +6,7 @@ export function Hombre() {
     const { fetchTableData } = useGlobalContext();
     const [zapatos, setZapatos] = useState([]);
 
-    const { activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange } = useGlobalContext();  // Obtenemos el contexto
-
-    const { isAdmin } = useGlobalContext();
+    const { activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
 
 
 
