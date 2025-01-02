@@ -27,7 +27,7 @@ export const Login = () => {
         } catch (error) {
             console.error('Error logging in:', error.message);
             if (error.message.includes('Invalid login credentials')) {
-                alert('Wrong email or password');
+                openPopup('loginError')
             } else {
                 alert('Error logging in');
             }
@@ -74,6 +74,34 @@ export const Login = () => {
                             </Link>
                         </CardFooter>
                     </form>
+                </Card>
+            </Dialog>
+
+            {/* Popup para errores de login */}
+            <Dialog
+                size="xs"
+                open={activePopup === "loginError"} // Abre el popup solo si activePopup es "loginError"
+                handler={() => openPopup(null)} // Cierra el popup al hacer clic fuera
+                className="bg-transparent shadow-none"
+            >
+                <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
+                    <CardBody className="flex flex-col items-center gap-4">
+                        <Typography variant="h4" color="red">
+                            Error
+                        </Typography>
+                        <Typography className="mb-3 font-normal text-gray-600 dark:text-gray-300 text-center" variant="paragraph">
+                            Wrong email or password.
+                        </Typography>
+                    </CardBody>
+                    <CardFooter className="pt-0">
+                        <Button
+                            variant="gradient"
+                            fullWidth
+                            onClick={() => openPopup(null)} // Cierra el popup
+                        >
+                            Close
+                        </Button>
+                    </CardFooter>
                 </Card>
             </Dialog>
         </>

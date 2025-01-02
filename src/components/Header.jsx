@@ -3,6 +3,7 @@ import { useGlobalContext } from "../context/GlobalContext";
 import { Login } from "./Login";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../bd/supabase";
+import { LanguageToggleButton } from "./LanguageToggleButton";
 
 export const Header = () => {
 
@@ -56,6 +57,7 @@ export const Header = () => {
                     </Link>
                   </li>
                 )}
+                <li><LanguageToggleButton /></li>
                 {session && (
                   <li><Button onClick={handleLogout}>Logout</Button></li>
                 )}
