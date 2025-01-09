@@ -33,3 +33,11 @@ Quito el contenido del index.css y App.css.Y añado contenido del tailwind al in
         sustituyo el export default{} por module.exports = withMT({})
 
 - instalo npm i react-icons
+
+
+
+
+npm uninstall eslint eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-react-refresh
+
+
+Heroku!
