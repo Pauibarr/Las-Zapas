@@ -2,15 +2,15 @@ import { useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Login } from "./Login";
-import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../bd/supabase";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ImContrast } from "react-icons/im";
-// import { LanguageToggleButton } from "./LanguageToggleButton";
+import { supabase } from "../bd/supabase";
 
 export const Header = () => {
-  const { session, setSession, isAdmin, setIsAdmin } = useGlobalContext();
+  const { session, setSession, isAdmin, setIsAdmin, openPopup, logout } = useGlobalContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para abrir/cerrar el menú móvil
   let navigate = useNavigate();
+  const location = useLocation(); // Hook para obtener la ruta actual
 
   function changeDarkMode() {
     document.documentElement.classList.toggle("dark");
@@ -21,11 +21,19 @@ export const Header = () => {
     if (error) {
       console.error("Error during logout:", error);
     } else {
-      setSession(null);
-      setIsAdmin(false);
-      navigate("/");
+      await logout(); // Llama a la función de logout del contexto
+      openPopup(null); // Cierra cualquier popup activo
+      setSession(null); // Limpia la sesión
+      setIsAdmin(false); // Asegúrate de que el usuario no es administrador
+      navigate("/"); // Redirige a la página principal
     }
   }
+
+  // Sirve para hacer un .map para las rutas. NO ENRUTA y se encesita si o si el enrutamiento del Router en App.jsx
+  const menuRoutes = [
+    { path: "/hombre", label: "Hombre" },
+    { path: "/mujer", label: "Mujer" },
+  ]
 
   return (
     <header className="bg-gray-900 text-white p-4 shadow-md fixed left-0 right-0 z-50">
@@ -37,37 +45,38 @@ export const Header = () => {
 
         {/* Menú para pantallas grandes */}
         <nav className="hidden md:block">
-          <ul className="flex space-x-4">
-          <button
+          <ul className="flex space-x-4 items-center">
+            <button
               onClick={changeDarkMode}
               className="h-7 w-7 bg-white dark:bg-blue-gray-800 rounded-md shadow-lg"
               aria-hidden="true"
             >
-              <ImContrast className='w-full dark:text-white text-blue-gray-800' />
+              <ImContrast className="w-full dark:text-white text-blue-gray-800" />
             </button>
             {session && session.user && session.user.user_metadata && (
               <li className="hover:text-gray-400">Bienvenido {session.user.user_metadata.name}</li>
             )}
             {!session && (
               <li className="hover:text-gray-400">
-                <Login />
+                <Login>Login</Login>
               </li>
             )}
             {session && (
               <>
-                <li className="hover:text-gray-400">
-                  <Link to="/hombre">Hombre</Link>
-                </li>
-                <li className="hover:text-gray-400">
-                  <Link to="/mujer">Mujer</Link>
-                </li>
+                {menuRoutes.map(item => 
+                  location.pathname !== item.path && (
+                    <li key={item.path} className="hover:text-gray-400">
+                      <Link to={item.path}>{item.label}</Link>
+                    </li>
+                  )
+                )}
               </>
             )}
             {isAdmin && (
               <li>
                 <Link
                   to="/usuarios"
-                  className="text-white dark:text-blue-gray-800 dark:hover:text-blue-gray-400 hover:text-blue-gray-400 hover:scale-x-105 hover:scale-y-105 transition duration-150 shadow-lg hover:shadow-xl hover:shadow-white/50 shadow-white/50 dark:hover:shadow-blue-gray-800/50 dark:shadow-blue-gray-800/50"
+                  className="text-white hover:text-gray-400"
                 >
                   Usuarios
                 </Link>
@@ -112,24 +121,25 @@ export const Header = () => {
             )}
             {!session && (
               <li className="hover:text-gray-400">
-                <Login />
+                <Login></Login>
               </li>
             )}
             {session && (
               <>
-                <li className="hover:text-gray-400">
-                  <Link to="/hombre">Hombre</Link>
-                </li>
-                <li className="hover:text-gray-400">
-                  <Link to="/mujer">Mujer</Link>
-                </li>
+                {menuRoutes.map(item => 
+                  location.pathname !== item.path && (
+                    <li key={item.path} className="hover:text-gray-400">
+                      <Link to={item.path}>{item.label}</Link>
+                    </li>
+                  )
+                )}
               </>
             )}
             {isAdmin && (
               <li>
                 <Link
                   to="/usuarios"
-                  className="text-white dark:text-blue-gray-800 dark:hover:text-blue-gray-400 hover:text-blue-gray-400 hover:scale-x-105 hover:scale-y-105 transition duration-150 shadow-lg hover:shadow-xl hover:shadow-white/50 shadow-white/50 dark:hover:shadow-blue-gray-800/50 dark:shadow-blue-gray-800/50"
+                  className="text-white hover:text-gray-400"
                 >
                   Usuarios
                 </Link>

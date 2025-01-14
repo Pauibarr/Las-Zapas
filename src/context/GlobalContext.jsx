@@ -242,6 +242,7 @@ export const GlobalProvider = ({ children }) => {
             fetchUserData,
             fetchTableData,
             isAdmin,
+            setIsAdmin,
             selectedItem,
             handleOpen,
             editTableData,

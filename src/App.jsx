@@ -15,7 +15,8 @@ export default function App() {
     <>
     <div className="dark:bg-blue-gray-900 min-h-screen">
     <Header/>
-      <Routes>
+    {/* Enrutamiento */}
+      <Routes> 
         <Route path='/' element={<Home />} />
         <Route path='/registro' element={<Registro />} />
         <Route path='/login' element={<Login />} />
