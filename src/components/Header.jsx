@@ -17,6 +17,9 @@ export const Header = () => {
   }
 
   async function handleLogout() {
+    // Cierra cualquier popup activo
+    openPopup(null);
+
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error("Error during logout:", error);
@@ -27,6 +30,11 @@ export const Header = () => {
       setIsAdmin(false); // Asegúrate de que el usuario no es administrador
       navigate("/"); // Redirige a la página principal
     }
+  }
+  
+  function handleLoginClick() {
+    setIsMenuOpen(false); // Cierra el menú móvil al abrir el popup
+    openPopup("login");
   }
 
   // Sirve para hacer un .map para las rutas. NO ENRUTA y se encesita si o si el enrutamiento del Router en App.jsx
@@ -58,7 +66,7 @@ export const Header = () => {
             )}
             {!session && (
               <li className="hover:text-gray-400">
-                <Login>Login</Login>
+                <Login/>
               </li>
             )}
             {session && (
@@ -121,7 +129,7 @@ export const Header = () => {
             )}
             {!session && (
               <li className="hover:text-gray-400">
-                <Login></Login>
+                <Button onClick={handleLoginClick}>Login</Button>
               </li>
             )}
             {session && (

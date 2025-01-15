@@ -1,148 +1,149 @@
-import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@material-tailwind/react';
-import { useEffect, useState } from "react";
+import { Dialog } from "@material-tailwind/react";
 import { useGlobalContext } from "../context/GlobalContext";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export function Mujer() {
-    const { fetchTableData } = useGlobalContext();
-    const [zapatos, setZapatos] = useState([]);
+  const { fetchTableData, zapatosMujer, setZapatosMujer, zapatillasMujer, setZapatillasMujer, botasMujer, setBotasMujer, handleOpen, activePopup, openPopup } = useGlobalContext();
 
-    const { activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
+  const openLoginForCategory = (category) => {
+    handleOpen(null, category);
+    openPopup("login");
+  };
 
-    useEffect(() => {
-        const fetchZapatosMujer = async () => {
+  useEffect(() => {
+        const fetchZapatos = async () => {
             const data = await fetchTableData("ZapatosDeVestirMujer");
-            setZapatos(data);
+            setZapatosMujer(data);
         };
-        fetchZapatosMujer();
-    }, [fetchTableData]);
+        fetchZapatos();
+        
+        const fetchZapatillas = async () => {
+          const data = await fetchTableData("ZapatillasMujer");
+          setZapatosMujer(data);
+      };
+      fetchZapatillas();
 
-    return (
-        <div className="container mx-auto py-20 pb-16">
-            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">Zapatos de Vestir para Mujer</h1>
-            {zapatos.length === 0 ? ( // Length revisa si hay o no datos
-                <p className="text-blue-gray-600 dark:text-blue-gray-100">No hay zapatos disponibles</p>//Si no hay, lanza este párrafo
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {zapatos.map((zapato) => (
-                        <div key={zapato.id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full">
-                            <button className="w-full transition duration-150 hover:scale-x-105 hover:scale-y-105">
-                                <img
-                                    onClick={()=> handleOpen(zapato, "zapatoDetail")}
-                                    src={zapato.imagen || "https://via.placeholder.com/150"} // Imagen placeholder si no hay URL
-                                    alt={zapato.nombre}
-                                    className="w-full h-48 object-cover mb-4 rounded-md"
-                                />
-                            </button>
-                            <Dialog
-                              size="xs"
-                              open={activePopup ==="zapatoDetail" && selectedItem?.id === zapato.id}
-                              handler={()=> openPopup(null)}// Para cerrar el popup
-                              className="bg-transparent shadow-none"
-                            >
-                              <img src={selectedItem?.imagen} alt={selectedItem?.nombre} className="w-full mb-4 rounded-md" />
-                            </Dialog>
-                            <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapato.nombre}</h2>
-                            <div className="flex flex-col flex-grow">
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">Descripción: {zapato.descripcion}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mn-2">Talla: {zapato.talla}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100">Precio: {zapato.precio}</p>
-                            </div>
-                            {isAdmin && (
-                              <div className="mt-4 flex justify-between">
-                                <Button size="sm" color="blue" onClick={() => handleOpenEdit(zapato)}>Edit</Button>
-                                <Button size="sm" color="red" onClick={() => deleteTableData(zapato.id)}>Delete</Button>
-                              </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-                )}
+      const fetchBotas = async () => {
+        const data = await fetchTableData("BotasYBotinesMujer");
+        setZapatosMujer(data);
+    };
+    fetchBotas();
 
-                {isAdmin && (
-                    <div className="absolute bottom-20 right-4">
-                      <Button onClick={handleOpenPut} variant="gradient">Añadir Zapatos de Vestir</Button>
-                    </div>
-                )}    
+  }, [fetchTableData]);
+  
 
-                {/* Popup para agregar o editar zapato */}
-                <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={closePopup} size="xs" className="bg-transparent shadow-none">
-                <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
 
-                  <form onSubmit={(editZapatoBota) => {
-                    editZapatoBota.preventDefault();
-                    handleSubmit ("ZapatosDeVestirMujer", newZapatoBota)}}>
-                    <CardBody className="flex flex-col gap-4">
-                      <Typography variant="h4">{editData ? 'Edit Painting' : 'Add New Painting'}</Typography>
-                      {/* Form fields */}
-                      <Input
-                        label="Nombre"
-                        size="lg"
-                        color="blue-gray"
-                        name="nombre"
-                        required
-                        value={newZapatoBota.nombre}
-                        onChange={handleChange}
-                        className="dark:text-gray-300"
-                      />
-                      <Input
-                        label="Imagen"
-                        size="lg"
-                        color="blue-gray"
-                        name="imagen"
-                        required
-                        value={newZapatoBota.imagen}
-                        onChange={handleChange}
-                        className="dark:text-gray-300"
-                      />
-                      <Input
-                        label="Descripcion"
-                        size="lg"
-                        color="blue-gray"
-                        name="descripcion"
-                        required
-                        value={newZapatoBota.descripcion}
-                        onChange={handleChange}
-                        className="dark:text-gray-300"
-                      />
-                      <Input
-                        label="Talla"
-                        size="lg"
-                        color="blue-gray"
-                        name="talla"
-                        required
-                        value={newZapatoBota.talla}
-                        onChange={handleChange}
-                        className="dark:text-gray-300"
-                      />
-                      <Input
-                        label="Precio"
-                        size="lg"
-                        color="blue-gray"
-                        name="precio"
-                        required
-                        value={newZapatoBota.precio}
-                        onChange={(e) => {
-                          const inputValue = e.target.value;
-                        
-                          const numericValue = inputValue.replace(/\D/g, "");// Permitir solo números
-                        
-                          setNewZapatoBota((prev) => ({
-                            ...prev,
-                            precio: numericValue ? `${numericValue} €` : "", // Agrega "€" al final
-                          }));
-                        }}
-                        className="dark:text-gray-300"
-                      />
-                      {/* Otros campos de entrada */}
-                    </CardBody>
-                    <CardFooter className="pt-0">
-                      <Button variant="gradient" fullWidth type="submit">
-                        {editData ? 'Update Painting' : 'Add Painting'}
-                      </Button>
-                    </CardFooter>
-                  </form>
-                </Card>
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      <div className="relative flex flex-col items-center py-16">
+        <h2 className="text-black text-5xl font-extrabold mb-8 mt-6">
+          Zapatos para Mujeres
+        </h2>
+        <p className="text-gray-700 text-lg mb-12 text-center max-w-2xl">
+          Explora nuestra colección exclusiva para mujeres: Botas, Zapatillas y Zapatos de vestir.
+        </p>
+
+        <div className="text-center flex flex-wrap justify-center items-center gap-8 max-w-7xl px-4">
+          {/* Botas */}
+        {botasMujer.map((Bota) => (
+          <div key={Bota.id} className="bg-white shadow-lg rounded-lg overflow-hidden group">
+            <button className="w-full transition duration-300 hover:scale-105">
+              <img
+                onClick={() => handleOpen(null, "botasMujer")}
+                src="/botasMujer.png" // Cambia por la imagen correspondiente
+                alt="Botas"
+                className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </button>
+            <Dialog
+              size="xs"
+              open={activePopup === "botasMujer"}
+              handler={() => openPopup(null)}
+              className="bg-transparent shadow-none"
+            >
+              <img src="/botasMujer.png" alt="Botas" className="w-full mb-4 rounded-md" />
             </Dialog>
+            <div className="p-4">
+              <h3 className="text-2xl font-bold mb-2">Botas</h3>
+              <p className="text-gray-600 mb-4">Duraderas y con estilo para cualquier ocasión.</p>
+              <Link to="/botasMujer">
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  onClick={() => openLoginForCategory("botasMujer")}
+                >
+                  Ver Más
+                </button>
+              </Link>
+            </div>
+          </div>
+        ))}
+          {/* Zapatillas */}
+          <div className="bg-white shadow-lg rounded-lg overflow-hidden group">
+            <button className="w-full transition duration-300 hover:scale-105">
+              <img
+                onClick={() => handleOpen(null, "zapatillasMujer")}
+                src="/zapatillasMujer.png"
+                alt="Zapatillas"
+                className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </button>
+            <Dialog
+              size="xs"
+              open={activePopup === "zapatillasMujer"}
+              handler={() => openPopup(null)}
+              className="bg-transparent shadow-none"
+            >
+              <img src="/zapatillasMujer.png" alt="Zapatillas" className="w-full mb-4 rounded-md" />
+            </Dialog>
+            <div className="p-4">
+              <h3 className="text-2xl font-bold mb-2">Zapatillas</h3>
+              <p className="text-gray-600 mb-4">Comodidad y estilo para tu día a día.</p>
+              <Link to="/zapatillasMujer">
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  onClick={() => openLoginForCategory("zapatillasMujer")}
+                >
+                  Ver Más
+                </button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Zapatos de vestir */}
+          <div className="bg-white shadow-lg rounded-lg overflow-hidden group">
+            <button className="w-full transition duration-300 hover:scale-105">
+              <img
+                onClick={() => handleOpen(null, "vestirMujer")}
+                src="/vestirMujer.png"
+                alt="Zapatos de vestir"
+                className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </button>
+            <Dialog
+              size="xs"
+              open={activePopup === "vestirMujer"}
+              handler={() => openPopup(null)}
+              className="bg-transparent shadow-none"
+            >
+              <img src="/vestirMujer.png" alt="Zapatos de vestir" className="w-full mb-4 rounded-md" />
+            </Dialog>
+            <div className="p-4">
+              <h3 className="text-2xl font-bold mb-2">Zapatos de vestir</h3>
+              <p className="text-gray-600 mb-4">Elegancia para ocasiones especiales.</p>
+              <Link to="/zapatosMujer">
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  onClick={() => openLoginForCategory("vestirMujer")}
+                >
+                  Ver Más
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

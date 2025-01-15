@@ -5,6 +5,7 @@ import { useGlobalContext } from "../context/GlobalContext";
 import { supabase } from "../bd/supabase";
 
 export const Login = () => {
+
     const { activePopup, openPopup, setSession } = useGlobalContext();  // Obtenemos el contexto
     const handleOpen = () => openPopup("login"); // Abre el popup de login
 

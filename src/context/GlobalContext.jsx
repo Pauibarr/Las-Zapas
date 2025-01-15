@@ -5,6 +5,17 @@ import { supabase } from "../bd/supabase";
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+
+    // Esto es para las imagenes desde la base de datos para hombre y mujer
+    const [zapatosHombre, setZapatosHombre] = useState([]);
+    const [zapatillasHombre, setZapatillasHombre] = useState([]);
+    const [botasHombre, setBotasHombre] = useState([]);
+    const [zapatosMujer, setZapatosMujer] = useState([]);
+    const [zapatillasMujer, setZapatillasMujer] = useState([]);
+    const [botasMujer, setBotasMujer] = useState([]);
+    ////////////////////////////
+
+    const [zapass, setZapass] = useState([]);
     const [activePopup, setActivePopup] = useState(null); // Manejo de popups
     const [session, setSession] = useState(null); // Sesión actual del usuario
     const [userData, setUserData] = useState(null); // Datos del usuario
@@ -234,6 +245,20 @@ export const GlobalProvider = ({ children }) => {
 
     return (
         <GlobalContext.Provider value={{
+            zapatosHombre,
+            setZapatosHombre,
+            zapatillasHombre,
+            setZapatillasHombre,
+            botasHombre,
+            setBotasHombre,
+            zapatosMujer,
+            setZapatosMujer,
+            zapatillasMujer,
+            setZapatillasMujer,
+            botasMujer,
+            setBotasMujer,
+            zapass,
+            setZapass,
             activePopup,
             openPopup,
             session,

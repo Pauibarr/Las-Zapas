@@ -57,14 +57,14 @@ export function Home() {
                               </>
                 )}
                 {session && (
-                              <>
+                              <Link to="/hombre">
                                 <button
                                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                   onClick={() => openLoginForCategory("zapatoHombre")}
                                 >
-                                 <Link to="/hombre">Ver Más</Link>
+                                  Ver Más
                                 </button>
-                              </>
+                              </Link>
                 )}
             </div>
           </div>
@@ -103,14 +103,14 @@ export function Home() {
                               </>
                 )}
                 {session && (
-                              <>
+                              <Link to="/mujer">
                                 <button
                                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                                   onClick={() => openLoginForCategory("zapatoMujer")}
                                 >
-                                 <Link to="/mujer">Ver Más</Link>
+                                  Ver Más
                                 </button>
-                              </>
+                              </Link>
                 )}
             </div>
           </div>
