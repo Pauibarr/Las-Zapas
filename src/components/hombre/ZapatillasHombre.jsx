@@ -4,7 +4,7 @@ import { useGlobalContext } from '../../context/GlobalContext';
 
 export function ZapatillasHombre() {
 
-    const { fetchTableData, zapass, setZapass, activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
+    const { fetchTableData, zapass, setZapass, activePopup, openPopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
 
 
 

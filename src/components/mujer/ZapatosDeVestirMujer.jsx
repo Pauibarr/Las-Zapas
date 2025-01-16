@@ -5,7 +5,7 @@ import { useGlobalContext } from '../../context/GlobalContext';
 export function ZapatosDeVestirMujer() {
     const [zapass, setZapass] = useState([]);
 
-    const { fetchTableData, activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
+    const { fetchTableData, activePopup, openPopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
 
     useEffect(() => {
         const fetchZapatosBotas = async () => {
