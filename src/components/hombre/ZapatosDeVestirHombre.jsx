@@ -1,11 +1,10 @@
 import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@material-tailwind/react';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGlobalContext } from '../../context/GlobalContext';
 
 export function ZapatosDeVestirHombre() {
-    const [zapass, setZapass] = useState([]);
 
-    const { fetchTableData, activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
+    const { fetchTableData, zapass, setZapass, activePopup, openPopup, closePopup, selectedItem, handleOpen, editData, handleOpenEdit, deleteTableData, newZapatoBota, setNewZapatoBota, handleOpenPut, editTableData, handleSubmit, handleChange, isAdmin } = useGlobalContext();  // Obtenemos el contexto
 
 
 
@@ -25,7 +24,7 @@ export function ZapatosDeVestirHombre() {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {zapass.map((zapatoBota) => (
-                        <div key={zapatoBota.id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full">
+                        <div key={zapatoBota.id} className="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full">
                             <button className="w-full transition duration-150 hover:scale-x-105 hover:scale-y-105">
                                 <img
                                     onClick={()=> handleOpen(zapatoBota, "zapatoDetail")}
@@ -50,8 +49,8 @@ export function ZapatosDeVestirHombre() {
                             </div>
                             {isAdmin && (
                               <div className="mt-4 flex justify-between">
-                                <Button size="sm" color="blue" onClick={() => handleOpenEdit(zapatoBota)}>Edit</Button>
-                                <Button size="sm" color="red" onClick={() => deleteTableData(zapatoBota.id)}>Delete</Button>
+                                <Button size="sm" color="blue" onClick={() => handleOpenEdit("ZapatosDeVestirHombre",zapatoBota)}>Edit</Button>
+                                <Button size="sm" color="red" onClick={() => deleteTableData("ZapatosDeVestirHombre",zapatoBota.id)}>Delete</Button>
                               </div>
                             )}
                         </div>
@@ -66,7 +65,7 @@ export function ZapatosDeVestirHombre() {
                 )}    
 
                 {/* Popup para agregar o editar zapato */}
-                <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={closePopup} size="xs" className="bg-transparent shadow-none">
+                <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={openPopup} size="xs" className="bg-transparent shadow-none">
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
 
                   <form onSubmit={(editZapatoBota) => {

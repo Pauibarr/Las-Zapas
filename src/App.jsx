@@ -19,7 +19,7 @@ export default function App() {
 
   return (
     <>
-    <div className="dark:bg-blue-gray-900 min-h-screen">
+    <div className="bg-gray-100 dark:bg-blue-gray-900 min-h-screen">
     <Header/>
     {/* Enrutamiento */}
       <Routes> 
@@ -34,7 +34,7 @@ export default function App() {
         <Route path='/mujer' element={<Mujer />} />
         <Route path='/botasMujer' element={<BotasMujer />} />
         <Route path='/zapatillasMujer' element={<ZapatillasMujer />} />
-        <Route path='/botasMujer' element={<ZapatosDeVestirMujer />} />
+        <Route path='/zapatosMujer' element={<ZapatosDeVestirMujer />} />
         <Route path='/usuarios' element={<Usuarios />} />
         <Route path='/footer' element={<Footer />} />
       </Routes>

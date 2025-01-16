@@ -14,7 +14,7 @@ export function BotasHombre() {
             setZapass(data);
         };
         fetchZapatosBotas();
-    }, [fetchTableData]);
+    }, []);
 
     return (
         <div className="container mx-auto py-20 pb-16">
@@ -24,7 +24,7 @@ export function BotasHombre() {
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {zapass.map((zapatoBota) => (
-                        <div key={zapatoBota.id} className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full">
+                        <div key={zapatoBota.id} className="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full">
                             <button className="w-full transition duration-150 hover:scale-x-105 hover:scale-y-105">
                                 <img
                                     onClick={()=> handleOpen(zapatoBota, "zapatoBotaDetail")}
@@ -65,7 +65,7 @@ export function BotasHombre() {
                 )}    
 
                 {/* Popup para agregar o editar zapatoBota */}
-                <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={closePopup} size="xs" className="bg-transparent shadow-none">
+                <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={openPopup} size="xs" className="bg-transparent shadow-none">
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
 
                   <form onSubmit={(editZapatoBota) => {

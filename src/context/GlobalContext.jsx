@@ -29,6 +29,7 @@ export const GlobalProvider = ({ children }) => {
 
     const [newZapatoBota, setNewZapatoBota] = useState({
         nombre: "",
+        created_at: "",
         descripcion: "",
         talla: "",
         imagen: "",
@@ -151,20 +152,17 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    const handleOpenEdit = (item, tableName, popupName) => {
-        setEditData(item); // Guarda el objeto actual en edición.
-        setTableData((prev) => ({
-            ...prev,
-            [tableName]: prev[tableName]?.map((data) =>
-                data.id === item.id ? { ...data, ...item } : data
-            ),
-        }));
-        openPopup(popupName); // Abre el popup correspondiente.
+    const handleOpenEdit = (tableName, item) => {
+        setEditData(item); // Guarda los datos actuales en edición.
+        setNewZapatoBota(item); // Actualiza el formulario con los datos del zapato.
+        openPopup("editZapatoBota"); // Abre el popup de edición.
     };    
+    
 
     const putZapatoBota = () => {
         setNewZapatoBota({
             nombre: "",
+            created_at: "",
             descripcion: "",
             talla: "",
             imagen: "",
@@ -179,31 +177,42 @@ export const GlobalProvider = ({ children }) => {
 
     const handleSubmit = async (tableName, newItem) => {
         try {
-            const { data, error } = await supabase.from(tableName).insert([newItem]).select();
-            if (error) throw error;
+            const { created_at, ...dataToSubmit } = newItem; // Excluye created_at
+            const itemToSubmit = editData ? newItem : dataToSubmit; // Solo envía `created_at` si es necesario
     
-            if (!data || data.length === 0) {
-                throw new Error("Insert failed, no data returned.");
+            let data;
+            if (editData) {
+                // Modo edición
+                const { data: updatedData, error } = await supabase
+                    .from(tableName)
+                    .update(itemToSubmit)
+                    .eq("id", editData.id)
+                    .select();
+                if (error) throw error;
+                data = updatedData[0];
+            } else {
+                // Modo creación
+                const { data: insertedData, error } = await supabase
+                    .from(tableName)
+                    .insert([itemToSubmit])
+                    .select();
+                if (error) throw error;
+                data = insertedData[0];
             }
     
-            // Actualizar la cache local con el nuevo dato
-            setTableData((prev) => ({
-                ...prev,
-                [tableName]: [...(prev[tableName] || []), data[0]],
-            }));
-    
-            // Limpia el formulario y cierra el popup si es necesario
+            // Limpia el formulario y cierra el popup
             setNewZapatoBota({
                 nombre: "",
+                created_at: "",
                 descripcion: "",
                 talla: "",
                 imagen: "",
                 precio: "",
             });
-    
-            openPopup(null); // Cierra el popup activo
+            setEditData(null);
+            openPopup(null);
         } catch (error) {
-            console.error(`Error adding item to ${tableName}:`, error.message);
+            console.error(`Error handling item in ${tableName}:`, error.message);
             setError(error.message);
         }
     };
