@@ -137,17 +137,31 @@ export const GlobalProvider = ({ children }) => {
     // Función para eliminar un usuario
     const deleteUser = async (id) => {
         try {
-            const { error } = await supabase.from("Usuarios").delete().eq("id", id);
-
-            if (error) throw error;
-
-            // Elimina el usuario del estado local
+            // Obtén el UID del usuario en el sistema de autenticación
+            const { data: user, error: fetchError } = await supabase
+                .from("Usuarios")
+                .select("uid") // Asegúrate de que tienes el campo `uid` en tu tabla `Usuarios`
+                .eq("id", id)
+                .single();
+    
+            if (fetchError) throw fetchError;
+    
+            // Elimina al usuario de Supabase Auth
+            const { error: authError } = await supabase.auth.admin.deleteUser(user.uid);
+            if (authError) throw authError;
+    
+            // Elimina al usuario de la tabla `Usuarios`
+            const { error: tableError } = await supabase.from("Usuarios").delete().eq("id", id);
+            if (tableError) throw tableError;
+    
+            // Actualiza el estado local
             setUsuarios((prev) => prev.filter((user) => user.id !== id));
         } catch (error) {
             console.error("Error deleting user:", error.message);
             setError(error.message);
         }
     };
+    
     
 
     //Fin: Vista Usuarios
