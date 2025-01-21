@@ -48,7 +48,7 @@ export const Header = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <h1 className="text-2xl sm:text-3xl font-bold">
-          <Link to="/">Las Zapass</Link>
+          <Link to="/">Las Zapas</Link>
         </h1>
 
         {/* Menú para pantallas grandes */}
