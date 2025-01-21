@@ -137,27 +137,24 @@ export const GlobalProvider = ({ children }) => {
     // Función para eliminar un usuario
     const deleteUser = async (id) => {
         try {
-            // Obtén el UID del usuario en el sistema de autenticación
-            const { data: user, error: fetchError } = await supabase
-                .from("Usuarios")
-                .select("uid") // Asegúrate de que tienes el campo `uid` en tu tabla `Usuarios`
-                .eq("id", id)
-                .single();
+            // Haz la solicitud al endpoint del backend
+            const response = await fetch('https://laszapas.vercel.app/api/delete-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id }),
+            });
     
-            if (fetchError) throw fetchError;
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error al eliminar el usuario');
+            }
     
-            // Elimina al usuario de Supabase Auth
-            const { error: authError } = await supabase.auth.admin.deleteUser(user.uid);
-            if (authError) throw authError;
-    
-            // Elimina al usuario de la tabla `Usuarios`
-            const { error: tableError } = await supabase.from("Usuarios").delete().eq("id", id);
-            if (tableError) throw tableError;
-    
-            // Actualiza el estado local
+            // Si se elimina con éxito, actualiza el estado local
             setUsuarios((prev) => prev.filter((user) => user.id !== id));
         } catch (error) {
-            console.error("Error deleting user:", error.message);
+            console.error('Error deleting user:', error.message);
             setError(error.message);
         }
     };
