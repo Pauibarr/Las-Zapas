@@ -71,7 +71,11 @@ export const Login = () => {
                                 ¿Eres nuevo cliente?
                             </Typography>
                             <Link to="/registro" onClick={() => openPopup("registro")}>
-                                <Button color="white" size="lg" fullWidth type="submit">Registro</Button>
+                                <Button 
+                                    color="white" 
+                                    size="lg" 
+                                    fullWidth 
+                                    type="submit">Registro</Button>
                             </Link>
                         </CardFooter>
                     </form>

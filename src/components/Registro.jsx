@@ -5,72 +5,76 @@ import { supabase } from "../bd/supabase";
 import { useGlobalContext } from "../context/GlobalContext";
 
 export const Registro = () => {
-    const { activePopup, openPopup } = useGlobalContext(); // Accedemos al contexto
-    const handleOpen = () => openPopup("registro"); // Abrir el popup del registro
+    const { activePopup, openPopup } = useGlobalContext(); // Control global para el modal de registro
+    const [showPopup, setShowPopup] = useState(false);
+    const [showErrorPopup, setShowErrorPopup] = useState(false); // Estado local para el popup de error
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false); // Estado local para el popup de éxito
 
     const [dialogData, setDialogData] = useState({
-        name: '', email: '', password: '', confirmPassword: '' // Se mantiene el confirmPassword
+        name: "", email: "", password: "", confirmPassword: ""
     });
 
     async function handleSubmit(e) {
         e.preventDefault();
 
-        // Verificamos si las contraseñas coinciden antes de continuar con el registro
+        // Validar contraseñas
         if (dialogData.password !== dialogData.confirmPassword) {
-            alert("Las contraseñas no coinciden.");
+            
+            setShowErrorPopup(true); // Mostrar popup de error
             return;
         }
 
         try {
-            // Realizamos el registro en Supabase
-            let { data, error } = await supabase.auth.signUp({
+            // Registro en Supabase
+            const { data, error } = await supabase.auth.signUp({
                 email: dialogData.email,
                 password: dialogData.password,
                 options: {
-                    data: {
-                        name: dialogData.name
-                    }
-                }
+                    data: { name: dialogData.name },
+                },
             });
 
             if (error) throw error;
 
-            // Luego creamos el perfil en la base de datos
+            // Crear perfil en la base de datos
             const uid = data.user.id;
-            const role = data.user.email === 'paulones21052002@gmail.com' ? 'admin' : 'user';
-            let { error: profileError } = await supabase.from('Usuarios').insert([{
-                uid: uid,
-                email: data.user.email,
-                name_user: dialogData.name,
-                role: role,
-                created_at: new Date()
-            }]);
+            const role = data.user.email === "paulones21052002@gmail.com" ? "admin" : "user";
+            const { error: profileError } = await supabase.from("Usuarios").insert([
+                {
+                    uid: uid,
+                    email: data.user.email,
+                    name_user: dialogData.name,
+                    role: role,
+                    created_at: new Date(),
+                },
+            ]);
 
             if (profileError) throw profileError;
-
-            alert('Registro exitoso');
-            openPopup(null); // Cerrar el popup después de un registro exitoso
+            openPopup(false); // Cerrar modal de registro
+            setShowSuccessPopup(true); // Mostrar popup de éxito
 
         } catch (error) {
-            console.error('Error:', error);
+            console.error("Error:", error);
             alert(error.message);
         }
     }
 
     function handleChange(event) {
-        setDialogData((prevDialogData) => ({
-            ...prevDialogData,
-            [event.target.name]: event.target.value
+        setDialogData((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
         }));
     }
 
     return (
         <>
-            <Button onClick={handleOpen}>Registro</Button>
+            <Button onClick={() => showPopup("registro")}>Registro</Button>
+
+            {/* Modal de Registro */}
             <Dialog
                 size="xs"
-                open={activePopup === "registro"} // El popup solo se muestra si `activePopup` es "registro"
-                handler={openPopup}
+                open={activePopup === "registro"} // El popup solo se muestra si activePopup es "registro"
+                handler={() => setShowPopup(false)}
                 className="bg-transparent shadow-none"
             >
                 <div className="card bg-blue-400 shadow-lg w-full h-full rounded-3xl absolute transform -rotate-6"></div>
@@ -139,6 +143,59 @@ export const Registro = () => {
                             </Link>
                         </CardFooter>
                     </form>
+                </Card>
+            </Dialog>
+
+            {/* Popup de error */}
+            <Dialog
+                size="xs"
+                open={showErrorPopup}
+                handler={() => setShowErrorPopup(false)}
+                className="bg-transparent shadow-none"
+            >
+                <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
+                    <CardBody className="flex flex-col items-center">
+                        <Typography variant="h4" color="red">
+                            Error
+                        </Typography>
+                        <Typography className="text-center">
+                            Las contraseñas no coinciden.
+                        </Typography>
+                    </CardBody>
+                    <CardFooter>
+                        <Button
+                            variant="gradient"
+                            fullWidth
+                            onClick={() => setShowErrorPopup(false)}
+                        >
+                            Cerrar
+                        </Button>
+                    </CardFooter>
+                </Card>
+            </Dialog>
+
+            {/* Popup de éxito */}
+            <Dialog
+                size="xs"
+                open={showSuccessPopup}
+                handler={() => setShowSuccessPopup(false)}
+                className="bg-transparent shadow-none"
+            >
+                <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
+                    <CardBody className="flex flex-col items-center">
+                        <Typography variant="h4" color="green">
+                            Registro Exitoso
+                        </Typography>
+                    </CardBody>
+                    <CardFooter>
+                        <Button
+                            variant="gradient"
+                            fullWidth
+                            onClick={() => setShowSuccessPopup(false)}
+                        >
+                            Cerrar
+                        </Button>
+                    </CardFooter>
                 </Card>
             </Dialog>
         </>
