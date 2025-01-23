@@ -213,6 +213,12 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
+    const handleOpenImage = (item) => {
+        setSelectedItem(item); // Establece el elemento seleccionado para el popup.
+        openPopup("zapatoBotaDetail"); // Abre el popup específico de la imagen.
+    };
+    
+
     const handleOpenEdit = (tableName, item) => {
         setEditData(item); // Guarda los datos actuales en edición.
         setNewZapatoBota(item); // Actualiza el formulario con los datos del zapato.
@@ -251,6 +257,15 @@ export const GlobalProvider = ({ children }) => {
                     .select();
                 if (error) throw error;
                 data = updatedData[0];
+    
+                // Actualizar el estado zapass
+                setZapass(prev => prev.map(item => item.id === data.id ? data : item));
+    
+                // También actualiza tableData para reflejar los cambios en caché
+                setTableData((prev) => ({
+                    ...prev,
+                    [tableName]: prev[tableName]?.map((item) => item.id === data.id ? data : item)
+                }));
             } else {
                 // Modo creación
                 const { data: insertedData, error } = await supabase
@@ -259,6 +274,15 @@ export const GlobalProvider = ({ children }) => {
                     .select();
                 if (error) throw error;
                 data = insertedData[0];
+    
+                // Agregar el nuevo elemento al estado zapass
+                setZapass(prev => [...prev, data]);
+    
+                // También actualiza tableData para reflejar los cambios en caché
+                setTableData((prev) => ({
+                    ...prev,
+                    [tableName]: [...(prev[tableName] || []), data]
+                }));
             }
     
             // Limpia el formulario y cierra el popup
@@ -277,6 +301,8 @@ export const GlobalProvider = ({ children }) => {
             setError(error.message);
         }
     };
+    
+    
     
 
     const deleteTableData = async (tableName, id) => {
@@ -347,6 +373,7 @@ export const GlobalProvider = ({ children }) => {
             editTableData,
             editData,
             setEditData,
+            handleOpenImage,
             handleOpenEdit,
             newZapatoBota,
             setNewZapatoBota,
