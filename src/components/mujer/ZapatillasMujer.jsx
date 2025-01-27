@@ -1,7 +1,7 @@
 import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@material-tailwind/react';
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import { useGlobalContext } from '../../context/GlobalContext';
+import { useNavigate } from "react-router-dom";
 
 export function ZapatillasMujer() {
     const { 
@@ -11,6 +11,8 @@ export function ZapatillasMujer() {
         activePopup, 
         openPopup, 
         selectedItem, 
+        handleOpen, 
+        editData, 
         handleOpenEdit, 
         deleteTableData, 
         newZapatoBota, 
@@ -19,17 +21,17 @@ export function ZapatillasMujer() {
         handleSubmit, 
         handleChange, 
         isAdmin 
-    } = useGlobalContext(); 
+    } = useGlobalContext();
 
-    const navigate = useNavigate(); // Inicializar useNavigate
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchZapatillasMujer = async () => {
+        const fetchZapatosBotas = async () => {
             const data = await fetchTableData("ZapatillasMujer");
             setZapass(data);
         };
-        fetchZapatillasMujer();
-    }, []);
+        fetchZapatosBotas();
+    }, [fetchTableData]);
 
     return (
         <div className="container mx-auto py-20 pb-16">
@@ -41,13 +43,13 @@ export function ZapatillasMujer() {
                     {zapass.map((zapatoBota) => (
                         <div
                             key={zapatoBota.id}
-                            className="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full cursor-pointer transition duration-150 hover:scale-105"
-                            onClick={() => navigate(`/detalle-zapatilla/${zapatoBota.id}`)} // Redirigir al detalle
+                            className="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full cursor-pointer"
+                            onClick={() => navigate(`/comprar/ZapatillasMujer/${zapatoBota.nombre}`)}
                         >
                             <img
                                 src={zapatoBota.imagen || "https://via.placeholder.com/150"}
                                 alt={zapatoBota.nombre}
-                                className="w-full h-48 object-cover mb-4 rounded-md"
+                                className="w-full h-48 object-cover mb-4 rounded-md transition duration-150 hover:scale-x-105 hover:scale-y-105"
                             />
                             <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoBota.nombre}</h2>
                             <div className="flex flex-col flex-grow">
@@ -57,8 +59,8 @@ export function ZapatillasMujer() {
                             </div>
                             {isAdmin && (
                                 <div className="mt-4 flex justify-between">
-                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit(zapatoBota); }}>Edit</Button>
-                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData(zapatoBota.id); }}>Delete</Button>
+                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit("ZapatillasMujer", zapatoBota); }}>Edit</Button>
+                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData("ZapatillasMujer", zapatoBota.id); }}>Delete</Button>
                                 </div>
                             )}
                         </div>
@@ -74,12 +76,12 @@ export function ZapatillasMujer() {
 
             <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={openPopup} size="xs" className="bg-transparent shadow-none">
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
-                    <form onSubmit={(editZapatoBota) => {
-                        editZapatoBota.preventDefault();
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
                         handleSubmit("ZapatillasMujer", newZapatoBota);
                     }}>
                         <CardBody className="flex flex-col gap-4">
-                            <Typography variant="h4">{editData ? 'Editar Zapatilla' : 'Añadir Nueva Zapatilla'}</Typography>
+                            <Typography variant="h4">{editData ? 'Actualizar Zapatillas' : 'Añadir Zapatillas Nuevas'}</Typography>
                             <Input
                                 label="Nombre"
                                 size="lg"
@@ -140,7 +142,7 @@ export function ZapatillasMujer() {
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button variant="gradient" fullWidth type="submit">
-                                {editData ? 'Actualizar Zapatilla' : 'Añadir Zapatilla'}
+                                {editData ? 'Actualizar Zapatillas' : 'Añadir Zapatillas'}
                             </Button>
                         </CardFooter>
                     </form>

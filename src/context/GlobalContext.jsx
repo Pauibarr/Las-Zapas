@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
 import { supabase } from "../bd/supabase";
 
 const GlobalContext = createContext();
@@ -36,26 +35,6 @@ export const GlobalProvider = ({ children }) => {
         imagen: "",
         precio: "",
     });
-
-    // Idioma predeterminado para la traducción
-    const [language, setLanguage] = useState("es");
-
-    // Función para traducir texto usando LibreTranslate
-    const translateText = async (text, targetLang) => {
-        try {
-            const response = await axios.post("https://libretranslate.com/translate", {
-                q: text,
-                source: "auto", // Detecta automáticamente el idioma de origen
-                target: targetLang,
-                format: "text",
-            });
-            return response.data.translatedText;
-        } catch (error) {
-            console.error("Error translating text:", error.message);
-            setError("No se pudo realizar la traducción.");
-            return text; // Retorna el texto original si hay un error
-        }
-    };
 
     useEffect(() => {
             const fetchSession = async () => {
@@ -381,9 +360,6 @@ export const GlobalProvider = ({ children }) => {
             handleSubmit,
             deleteTableData,
             handleChange,
-            language,
-            setLanguage,
-            translateText,
             logout,
             error,
         }}>

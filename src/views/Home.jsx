@@ -1,8 +1,10 @@
 import { Button, Dialog } from "@material-tailwind/react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export function Home() {
+   const { t } = useTranslation();
   const { handleOpen, activePopup, openPopup, session } = useGlobalContext();
 
   const openLoginForCategory = (category) => {
@@ -27,7 +29,7 @@ export function Home() {
             <button className="w-full transition duration-300 hover:scale-105">
               <img
                 onClick={() => handleOpen(null, "zapatoHombre")} // Pasamos null como item
-                src="/3.png"
+                src="/3perfecto.png"
                 alt="Hombres"
                 className="w-full h-56 object-cover"
               />
@@ -38,10 +40,10 @@ export function Home() {
               handler={() => openPopup(null)} // Para cerrar el popup
               className="bg-transparent shadow-none"
             >
-              <img src="/3.png" alt="zapatoHombre" className="w-full mb-4 rounded-md" />
+              <img src="/3perfecto.png" alt="zapatoHombre" className="w-full mb-4 rounded-md" />
             </Dialog>
             <div className="p-4">
-              <h3 className="text-black dark:text-white text-2xl font-bold mb-2">Hombres</h3>
+              <h3 className="text-black dark:text-white text-2xl font-bold mb-2">{t('Hombres')}</h3>
               <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">
                 Estilo y comodidad en cada paso. Explora nuestra colección para hombres.
               </p>
