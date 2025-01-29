@@ -2,8 +2,10 @@ import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@
 import { useEffect } from "react";
 import { useGlobalContext } from '../../context/GlobalContext';
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 
 export function ZapatillasHombre() {
+    const { t } = useTranslation()
     const { 
         fetchTableData, 
         zapass, 
@@ -35,9 +37,9 @@ export function ZapatillasHombre() {
 
     return (
         <div className="container mx-auto py-20 pb-16">
-            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">Zapatillas para Hombre</h1>
+            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">{t('Zapatillas para Hombre')}</h1>
             {zapass.length === 0 ? (
-                <p className="text-blue-gray-600 dark:text-blue-gray-100">No hay zapatillas disponibles</p>
+                <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('No hay zapatillas disponibles')}</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {zapass.map((zapatoBota) => (
@@ -59,8 +61,8 @@ export function ZapatillasHombre() {
                             </div>
                             {isAdmin && (
                                 <div className="mt-4 flex justify-between">
-                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit("ZapatillasHombre", zapatoBota); }}>Edit</Button>
-                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData("ZapatillasHombre", zapatoBota.id); }}>Delete</Button>
+                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit("ZapatillasHombre", zapatoBota); }}>{t('Editar')}</Button>
+                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData("ZapatillasHombre", zapatoBota.id); }}>{t('Borrar')}</Button>
                                 </div>
                             )}
                         </div>
@@ -70,7 +72,7 @@ export function ZapatillasHombre() {
 
             {isAdmin && (
                 <div className="absolute bottom-20 right-4">
-                    <Button onClick={handleOpenPut} variant="gradient">Añadir Zapatillas</Button>
+                    <Button onClick={handleOpenPut} variant="gradient">{t('Añadir Zapatillas')}</Button>
                 </div>
             )}
 
@@ -81,9 +83,9 @@ export function ZapatillasHombre() {
                         handleSubmit("ZapatillasHombre", newZapatoBota);
                     }}>
                         <CardBody className="flex flex-col gap-4">
-                            <Typography variant="h4">{editData ? 'Actualizar Zapatillas' : 'Añadir Zapatillas Nuevas'}</Typography>
+                            <Typography variant="h4">{editData ? 'Editar Zapatilla' : 'Añadir Nueva Zapatilla'}</Typography>
                             <Input
-                                label="Nombre"
+                                label={t('Nombre')}
                                 size="lg"
                                 color="blue-gray"
                                 name="nombre"
@@ -93,7 +95,7 @@ export function ZapatillasHombre() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Imagen"
+                                label={t('Imagen')}
                                 size="lg"
                                 color="blue-gray"
                                 name="imagen"
@@ -103,7 +105,7 @@ export function ZapatillasHombre() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Descripción"
+                                label={t('Descripción')}
                                 size="lg"
                                 color="blue-gray"
                                 name="descripcion"
@@ -113,7 +115,7 @@ export function ZapatillasHombre() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Talla"
+                                label={t('Talla')}
                                 size="lg"
                                 color="blue-gray"
                                 name="talla"
@@ -123,7 +125,7 @@ export function ZapatillasHombre() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Precio"
+                                label={t('Precio')}
                                 size="lg"
                                 color="blue-gray"
                                 name="precio"
@@ -142,7 +144,7 @@ export function ZapatillasHombre() {
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button variant="gradient" fullWidth type="submit">
-                                {editData ? 'Actualizar Zapatillas' : 'Añadir Zapatillas'}
+                                {editData ? t('Actualizar Zapatillas') : t('Añadir Zapatillas')}
                             </Button>
                         </CardFooter>
                     </form>

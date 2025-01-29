@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../context/GlobalContext";
 import { supabase } from "../bd/supabase";
+import { useTranslation } from "react-i18next";
 
 export const Login = () => {
-
+    const { t } = useTranslation()
     const { activePopup, openPopup, setSession } = useGlobalContext();  // Obtenemos el contexto
     const handleOpen = () => openPopup("login"); // Abre el popup de login
 
@@ -44,7 +45,7 @@ export const Login = () => {
 
     return (
         <>
-            <Button onClick={handleOpen}>Login</Button>
+            <Button onClick={handleOpen}>{t('Iniciar Sesión')}</Button>
             <Dialog
                 size="xs"
                 open={activePopup === "login"} // Abre el popup solo si activePopup es "login"
@@ -56,26 +57,26 @@ export const Login = () => {
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
                     <form onSubmit={handleSubmit}>
                         <CardBody className="flex flex-col gap-4">
-                            <Typography variant="h4">Login</Typography>
+                            <Typography variant="h4">{t('Iniciar Sesión')}</Typography>
                             <Typography className="mb-3 font-normal text-gray-600 dark:text-gray-300" variant="paragraph">
-                                Enter your email and password to Login.
+                                {t('Ingrese su correo electrónico y contraseña para iniciar sesión')}
                             </Typography>
-                            <Typography className="-mb-2" variant="h6">Your Email</Typography>
+                            <Typography className="-mb-2" variant="h6">{t('Tu Correo')}</Typography>
                             <Input color="blue-gray" className="dark:text-gray-300" label="Email" size="lg" name="email" type="email" required onChange={handleChange} />
-                            <Typography className="-mb-2" variant="h6">Your Password</Typography>
+                            <Typography className="-mb-2" variant="h6">{t('Tu Contraseña')}</Typography>
                             <Input color="blue-gray" className="dark:text-gray-300" label="Password" size="lg" name="password" type="password" required autoComplete="current-password" onChange={handleChange} />
                         </CardBody>
                         <CardFooter className="pt-0">
-                            <Button variant="gradient" fullWidth type="submit">Login</Button>
+                            <Button variant="gradient" fullWidth type="submit">{t('Iniciar Sesión')}</Button>
                             <Typography variant="small" className="mt-4 flex justify-center">
-                                ¿Eres nuevo cliente?
+                                {t('¿Eres Nuevo?')}
                             </Typography>
                             <Link to="/registro" onClick={() => openPopup("registro")}>
                                 <Button 
                                     color="white" 
                                     size="lg" 
                                     fullWidth 
-                                    type="submit">Registro</Button>
+                                    type="submit">{t('Registro')}</Button>
                             </Link>
                         </CardFooter>
                     </form>
@@ -95,7 +96,7 @@ export const Login = () => {
                             Error
                         </Typography>
                         <Typography className="mb-3 font-normal text-gray-600 dark:text-gray-300 text-center" variant="paragraph">
-                            Wrong email or password.
+                            {t('Correo o contraseña equivocada')}
                         </Typography>
                     </CardBody>
                     <CardFooter className="pt-0">
@@ -104,7 +105,7 @@ export const Login = () => {
                             fullWidth
                             onClick={() => openPopup(null)} // Cierra el popup
                         >
-                            Close
+                            {t('Cerrar')}
                         </Button>
                     </CardFooter>
                 </Card>

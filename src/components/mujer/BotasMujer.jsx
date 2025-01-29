@@ -2,8 +2,10 @@ import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from '../../context/GlobalContext';
+import { useTranslation } from 'react-i18next';
 
 export function BotasMujer() {
+    const { t } = useTranslation()
     const { 
         fetchTableData, 
         zapass, 
@@ -33,9 +35,9 @@ export function BotasMujer() {
 
     return (
         <div className="container mx-auto py-20 pb-16">
-            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">Botas y Botines para Mujer</h1>
+            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">{t('Botas y Botines para Mujer')}</h1>
             {zapass.length === 0 ? (
-                <p className="text-blue-gray-600 dark:text-blue-gray-100">No hay botas disponibles</p>
+                <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('No hay botas disponibles')}</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {zapass.map((zapatoBota) => (
@@ -51,14 +53,14 @@ export function BotasMujer() {
                             />
                             <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoBota.nombre}</h2>
                             <div className="flex flex-col flex-grow">
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">Descripción: {zapatoBota.descripcion}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">Talla: {zapatoBota.talla}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100">Precio: {zapatoBota.precio}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{t('Descripción')}: {zapatoBota.descripcion}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{t('Talla')}: {zapatoBota.talla}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('Precio')}: {zapatoBota.precio}</p>
                             </div>
                             {isAdmin && (
                                 <div className="mt-4 flex justify-between">
-                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit(zapatoBota); }}>Edit</Button>
-                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData(zapatoBota.id); }}>Delete</Button>
+                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit(zapatoBota); }}>{t('Editar')}</Button>
+                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData(zapatoBota.id); }}>{t('Borrar')}</Button>
                                 </div>
                             )}
                         </div>
@@ -68,7 +70,7 @@ export function BotasMujer() {
 
             {isAdmin && (
                 <div className="absolute bottom-20 right-4">
-                    <Button onClick={handleOpenPut} variant="gradient">Añadir Botas</Button>
+                    <Button onClick={handleOpenPut} variant="gradient">{t('Añadir Botas')}</Button>
                 </div>
             )}
 
@@ -81,7 +83,7 @@ export function BotasMujer() {
                         <CardBody className="flex flex-col gap-4">
                             <Typography variant="h4">{selectedItem ? 'Editar Bota' : 'Añadir Nueva Bota'}</Typography>
                             <Input
-                                label="Nombre"
+                                label={t('Nombre')}
                                 size="lg"
                                 color="blue-gray"
                                 name="nombre"
@@ -91,7 +93,7 @@ export function BotasMujer() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Imagen"
+                                label={t('Imagen')}
                                 size="lg"
                                 color="blue-gray"
                                 name="imagen"
@@ -101,7 +103,7 @@ export function BotasMujer() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Descripción"
+                                label={t('Descripción')}
                                 size="lg"
                                 color="blue-gray"
                                 name="descripcion"
@@ -111,7 +113,7 @@ export function BotasMujer() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Talla"
+                                label={t('Talla')}
                                 size="lg"
                                 color="blue-gray"
                                 name="talla"
@@ -121,7 +123,7 @@ export function BotasMujer() {
                                 className="dark:text-gray-300"
                             />
                             <Input
-                                label="Precio"
+                                label={t('Precio')}
                                 size="lg"
                                 color="blue-gray"
                                 name="precio"
@@ -140,7 +142,7 @@ export function BotasMujer() {
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button variant="gradient" fullWidth type="submit">
-                                {selectedItem ? 'Actualizar Bota' : 'Añadir Bota'}
+                                {selectedItem ? t('Actualizar Bota') : t('Añadir Bota')}
                             </Button>
                         </CardFooter>
                     </form>

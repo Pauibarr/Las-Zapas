@@ -18,9 +18,9 @@ export function ZapatosDeVestirHombre() {
 
     return (
         <div className="container mx-auto py-20 pb-16">
-            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">Zapatos de Vestir para Hombre</h1>
+            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">{t('Zapatos de Vestir para Hombre')}</h1>
             {zapass.length === 0 ? ( // Length revisa si hay o no datos
-                <p className="text-blue-gray-600 dark:text-blue-gray-100">No hay zapatos disponibles</p>//Si no hay, lanza este párrafo
+                <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('No hay zapatos disponibles')}</p>//Si no hay, lanza este párrafo
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {zapass.map((zapatoBota) => (
@@ -43,14 +43,14 @@ export function ZapatosDeVestirHombre() {
                             </Dialog>
                             <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoBota.nombre}</h2>
                             <div className="flex flex-col flex-grow">
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">Descripción: {zapatoBota.descripcion}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mn-2">Talla: {zapatoBota.talla}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100">Precio: {zapatoBota.precio}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{t('Descripción')}: {zapatoBota.descripcion}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mn-2">{t('Talla')}: {zapatoBota.talla}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('Precio')}: {zapatoBota.precio}</p>
                             </div>
                             {isAdmin && (
                               <div className="mt-4 flex justify-between">
-                                <Button size="sm" color="blue" onClick={() => handleOpenEdit("ZapatosDeVestirHombre",zapatoBota)}>Edit</Button>
-                                <Button size="sm" color="red" onClick={() => deleteTableData("ZapatosDeVestirHombre",zapatoBota.id)}>Delete</Button>
+                                <Button size="sm" color="blue" onClick={() => handleOpenEdit("ZapatosDeVestirHombre",zapatoBota)}>{t('Editar')}</Button>
+                                <Button size="sm" color="red" onClick={() => deleteTableData("ZapatosDeVestirHombre",zapatoBota.id)}>{t('Borrar')}</Button>
                               </div>
                             )}
                         </div>
@@ -60,7 +60,7 @@ export function ZapatosDeVestirHombre() {
 
                 {isAdmin && (
                     <div className="absolute bottom-20 right-4">
-                      <Button onClick={handleOpenPut} variant="gradient">Añadir Zapatos de Vestir</Button>
+                      <Button onClick={handleOpenPut} variant="gradient">{t('Añadir Zapatos de Vestir')}</Button>
                     </div>
                 )}    
 
@@ -72,10 +72,10 @@ export function ZapatosDeVestirHombre() {
                     editZapatoBota.preventDefault();
                     handleSubmit ("ZapatosDeVestirHombre", newZapatoBota)}}>
                     <CardBody className="flex flex-col gap-4">
-                      <Typography variant="h4">{editData ? 'Edit Painting' : 'Add New Painting'}</Typography>
+                      <Typography variant="h4">{editData ? 'Editar Pai' : 'Add New Painting'}</Typography>
                       {/* Form fields */}
                       <Input
-                        label="Nombre"
+                        label={t('Nombre')}
                         size="lg"
                         color="blue-gray"
                         name="nombre"
@@ -85,7 +85,7 @@ export function ZapatosDeVestirHombre() {
                         className="dark:text-gray-300"
                       />
                       <Input
-                        label="Imagen"
+                        label={t('Imagen')}
                         size="lg"
                         color="blue-gray"
                         name="imagen"
@@ -95,7 +95,7 @@ export function ZapatosDeVestirHombre() {
                         className="dark:text-gray-300"
                       />
                       <Input
-                        label="Descripcion"
+                        label={t('Descripcion')}
                         size="lg"
                         color="blue-gray"
                         name="descripcion"
@@ -105,7 +105,7 @@ export function ZapatosDeVestirHombre() {
                         className="dark:text-gray-300"
                       />
                       <Input
-                        label="Talla"
+                        label={t('Talla')}
                         size="lg"
                         color="blue-gray"
                         name="talla"
@@ -115,7 +115,7 @@ export function ZapatosDeVestirHombre() {
                         className="dark:text-gray-300"
                       />
                       <Input
-                        label="Precio"
+                        label={t('Precio')}
                         size="lg"
                         color="blue-gray"
                         name="precio"

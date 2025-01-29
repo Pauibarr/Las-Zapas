@@ -2,8 +2,10 @@ import { Button, Dialog } from "@material-tailwind/react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export function Mujer() {
+  const { t } = useTranslation()
   const { fetchTableData, zapatosMujer, setZapatosMujer, zapatillasMujer, setZapatillasMujer, botasMujer, setBotasMujer, selectedItem, handleOpen, activePopup, openPopup } = useGlobalContext();
 
   const openLoginForCategory = (category) => {
@@ -46,10 +48,10 @@ export function Mujer() {
   return (
       <div className="relative flex flex-col items-center py-16">
         <h2 className="dark:text-white text-black md:text-5xl text-4xl font-extrabold mb-8 mt-6 text-center">
-          Zapatos para Mujeres
+          {t('Zapatos para Mujeres')}
         </h2>
         <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl">
-          Explora nuestra colección exclusiva para mujeres: Botas, Zapatillas y Zapatos de vestir.
+          {t('Explora nuestra colección exclusiva para mujeres: Botas, Zapatillas y Zapatos de vestir')}
         </p>
 
         <div className="text-center grid md:grid-cols-3 gap-8 px-4">
@@ -73,15 +75,15 @@ export function Mujer() {
               <img src={selectedItem?.imagen || "botasMujer.png"} alt={selectedItem?.nombre || "Botas"} className="w-full mb-4 rounded-md" />
             </Dialog>
             <div className="p-4">
-              <h3 className="text-black dark:text-white text-2xl font-bold mb-2">Botas</h3>
-              <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">Duraderas y con estilo para cualquier ocasión.</p>
+              <h3 className="text-black dark:text-white text-2xl font-bold mb-2">{t('Botas')}</h3>
+              <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">{t('Duraderas y con estilo para cualquier ocasión')}</p>
               <Link to="/botasMujer">
                 <Button
                   size="sm"
                   color="blue"
                   onClick={() => openLoginForCategory("botasMujer")}
                 >
-                  Ver Más
+                  {t('Ver Más')}
                 </Button>
               </Link>
             </div>
@@ -107,15 +109,15 @@ export function Mujer() {
                 <img src={selectedItem?.imagen || "zapatillasMujer.png"} alt={selectedItem?.nombre || "Zapatillas"} className="w-full mb-4 rounded-md" />
               </Dialog>
               <div className="p-4">
-                <h3 className="text-black dark:text-white text-2xl font-bold mb-2">Zapatillas</h3>
-                <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">Comodidad y estilo para tu día a día.</p>
+                <h3 className="text-black dark:text-white text-2xl font-bold mb-2">{t('Zapatillas')}</h3>
+                <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">{t('Comodidad y estilo para tu día a día')}</p>
                 <Link to="/zapatillasMujer">
                   <Button
                     size="sm"
                     color="blue"
                     onClick={() => openLoginForCategory("zapatillasMujer")}
                   >
-                    Ver Más
+                    {t('Ver Más')}
                   </Button>
                 </Link>
               </div>
@@ -142,15 +144,15 @@ export function Mujer() {
                 <img src={selectedItem?.imagen} alt={selectedItem?.nombre} className="w-full mb-4 rounded-md" />
               </Dialog>
               <div className="p-4">
-                <h3 className="text-black dark:text-white text-2xl font-bold mb-2">Zapatos de vestir</h3>
-                <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">Elegancia para ocasiones especiales.</p>
+                <h3 className="text-black dark:text-white text-2xl font-bold mb-2">{t('Zapatos de vestir')}</h3>
+                <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">{t('Elegancia para ocasiones especiales')}</p>
                 <Link to="/zapatosMujer">
                   <Button
                     size="sm"
                     color="blue"
                     onClick={() => openLoginForCategory("vestirMujer")}
                   >
-                    Ver Más
+                    {t('Ver Más')}
                   </Button>
                 </Link>
               </div>

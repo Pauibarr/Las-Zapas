@@ -17,10 +17,10 @@ export function Home() {
   return (
       <div className="relative flex flex-col items-center py-16">
         <h2 className="dark:text-white text-black md:text-5xl text-4xl font-extrabold mb-8 mt-6 text-center">
-          Bienvenido a Las Zapas
+          {t('Bienvenido a Las Zapas')}
         </h2>
         <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl">
-          Descubre nuestra colección de zapatillas para todas las ocasiones. ¡Encuentra tus favoritas ahora!
+          {t('Descubre nuestra colección de zapatillas para todas las ocasiones. ¡Encuentra tus favoritas ahora!')}
         </p>
 
         <div className="text-center grid md:grid-cols-2 gap-8 px-4">
@@ -45,7 +45,7 @@ export function Home() {
             <div className="p-4">
               <h3 className="text-black dark:text-white text-2xl font-bold mb-2">{t('Hombres')}</h3>
               <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">
-                Estilo y comodidad en cada paso. Explora nuestra colección para hombres.
+                {t('Estilo y comodidad en cada paso. Explora nuestra colección para hombres')}
               </p>
                 {!session && (
                               <>
@@ -54,7 +54,7 @@ export function Home() {
                                   color="blue"
                                   onClick={() => openLoginForCategory("zapatoHombre")}
                                   >
-                                    Ver Más
+                                    {t('Ver Más')}
                                 </Button>
                               </>
                 )}
@@ -65,7 +65,7 @@ export function Home() {
                                   color="blue"
                                   onClick={() => openLoginForCategory("zapatoHombre")}
                                 >
-                                  Ver Más
+                                  {t('Ver Más')}
                                 </Button>
                               </Link>
                 )}
@@ -91,9 +91,9 @@ export function Home() {
               <img src="/m1.png" alt="zapatoMujer" className="w-full mb-4 rounded-md" />
             </Dialog>
             <div className="p-4">
-              <h3 className="text-black dark:text-white text-2xl font-bold mb-2">Mujeres</h3>
+              <h3 className="text-black dark:text-white text-2xl font-bold mb-2">{t('Mujeres')}</h3>
               <p className="text-gray-600 dark:text-gray-100 font-semibold mb-4">
-                Diseños elegantes para cualquier ocasión. Encuentra tu par ideal.
+                {t('Diseños elegantes para cualquier ocasión. Encuentra tu par ideal')}
               </p>
                 {!session && (
                               <>
@@ -102,7 +102,7 @@ export function Home() {
                                   color="blue"
                                   onClick={() => openLoginForCategory("zapatoMujer")}
                                   >
-                                    Ver Más
+                                    {t('Ver Más')}
                                 </Button>
                               </>
                 )}
@@ -113,7 +113,7 @@ export function Home() {
                                   color="blue"
                                   onClick={() => openLoginForCategory("zapatoMujer")}
                                 >
-                                  Ver Más
+                                  {t('Ver Más')}
                                 </Button>
                               </Link>
                 )}

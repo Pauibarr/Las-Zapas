@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Button } from "@material-tailwind/react";
+import { useTranslation } from "react-i18next";
 
 export const Usuarios = () => {
+    const { t } = useTranslation()
     const { usuarios, deleteUser, updateUser, fetchUsuarios } = useGlobalContext();
     const [editUserId, setEditUserId] = useState(null);
     const [newName, setNewName] = useState("");
@@ -37,16 +39,16 @@ export const Usuarios = () => {
     return (
         <div className="container mx-auto py-20 pb-16">
             <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">
-                Gestión de Usuarios
+                {t('Gestión de Usuarios')}
             </h1>
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="w-full table-auto text-left text-sm text-gray-500 dark:text-gray-300">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-200 border-b border-gray-600 dark:border-gray-200 dark:bg-gray-900 dark:text-gray-100">
                         <tr>
-                            <th className="px-6 py-3">Nombre</th>
-                            <th className="px-6 py-3">Email</th>
-                            <th className="px-6 py-3">Rol</th>
-                            <th className="px-6 py-3">Acciones</th>
+                            <th className="px-6 py-3">{t('Nombre')}</th>
+                            <th className="px-6 py-3">{t('Correo')}</th>
+                            <th className="px-6 py-3">{t('Rol')}</th>
+                            <th className="px-6 py-3">{t('Acciones')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,7 +79,7 @@ export const Usuarios = () => {
                                                 : "bg-yellow-200 text-yellow-800"
                                         }`}
                                     >
-                                        {user.role}
+                                        {t(`roles.${user.role}`)}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4">
@@ -87,7 +89,7 @@ export const Usuarios = () => {
                                         onClick={() => deleteUser(user.id)}
                                         className="hover:bg-red-700 mr-2"
                                     >
-                                        Eliminar
+                                        {t('Eliminar')}
                                     </Button>
                                     {editUserId === user.id ? (
                                         <>
@@ -97,7 +99,7 @@ export const Usuarios = () => {
                                                 onClick={() => saveNameChange(user.id)}
                                                 className="hover:bg-green-700 mr-2"
                                             >
-                                                Guardar
+                                                {t('Guardar')}
                                             </Button>
                                             <Button
                                                 size="sm"
@@ -105,7 +107,7 @@ export const Usuarios = () => {
                                                 onClick={cancelEdit}
                                                 className="hover:bg-gray-700 mr-2"
                                             >
-                                                Cancelar
+                                                {t('Cancelar')}
                                             </Button>
                                         </>
                                     ) : (
@@ -118,7 +120,7 @@ export const Usuarios = () => {
                                             }}
                                             className="hover:bg-blue-700 mr-2"
                                         >
-                                            Editar Nombre
+                                            {t('Editar Nombre')}
                                         </Button>
                                     )}
                                     <Button
@@ -132,8 +134,9 @@ export const Usuarios = () => {
                                         className="hover:bg-blue-700"
                                     >
                                         {user.role === "admin"
-                                            ? "Convertir a Usuario"
-                                            : "Hacer Admin"}
+                                            ? t('Convertir a Usuario')
+                                            : t('Hacer Admin')
+                                        }
                                     </Button>
                                 </td>
                             </tr>

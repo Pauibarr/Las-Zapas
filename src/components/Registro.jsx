@@ -3,8 +3,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../bd/supabase";
 import { useGlobalContext } from "../context/GlobalContext";
+import { useTranslation } from "react-i18next";
 
 export const Registro = () => {
+    const { t } = useTranslation()
     const { activePopup, openPopup } = useGlobalContext(); // Control global para el modal de registro
     const [showPopup, setShowPopup] = useState(false);
     const [showErrorPopup, setShowErrorPopup] = useState(false); // Estado local para el popup de error
@@ -68,7 +70,7 @@ export const Registro = () => {
 
     return (
         <>
-            <Button onClick={() => showPopup("registro")}>Registro</Button>
+            <Button onClick={() => showPopup("registro")}>{t('Registro')}</Button>
 
             {/* Modal de Registro */}
             <Dialog
@@ -82,37 +84,37 @@ export const Registro = () => {
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
                     <form onSubmit={handleSubmit}>
                         <CardBody className="flex flex-col gap-4">
-                            <Typography variant="h4">Registro</Typography>
+                            <Typography variant="h4">{t('Registro')}</Typography>
                             <Typography className="mb-3 font-normal text-gray-600 dark:text-gray-300" variant="paragraph">
-                                Ingresa tu correo y contraseña para registrarte.
+                                {t('Ingresa tu correo y contraseña para registrarte')}
                             </Typography>
-                            <Typography className="-mb-2" variant="h6">Nombre</Typography>
+                            <Typography className="-mb-2" variant="h6">{t('Nombre')}</Typography>
                             <Input
                                 color="blue-gray"
                                 className="dark:text-gray-300"
-                                label="Nombre"
+                                label={t('Nombre')}
                                 size="lg"
                                 name="name"
                                 type="text"
                                 required
                                 onChange={handleChange}
                             />
-                            <Typography className="-mb-2" variant="h6">Correo Electrónico</Typography>
+                            <Typography className="-mb-2" variant="h6">{t('Correo Electrónico')}</Typography>
                             <Input
                                 color="blue-gray"
                                 className="dark:text-gray-300"
-                                label="Correo Electrónico"
+                                label={t('Correo Electrónico')}
                                 size="lg"
                                 name="email"
                                 type="email"
                                 required
                                 onChange={handleChange}
                             />
-                            <Typography className="-mb-2" variant="h6">Contraseña</Typography>
+                            <Typography className="-mb-2" variant="h6">{t('Contraseña')}</Typography>
                             <Input
                                 color="blue-gray"
                                 className="dark:text-gray-300"
-                                label="Contraseña"
+                                label={t('Contraseña')}
                                 size="lg"
                                 name="password"
                                 type="password"
@@ -120,11 +122,11 @@ export const Registro = () => {
                                 autoComplete="current-password"
                                 onChange={handleChange}
                             />
-                            <Typography className="-mb-2" variant="h6">Confirmar Contraseña</Typography>
+                            <Typography className="-mb-2" variant="h6">{t('Confirmar Contraseña')}</Typography>
                             <Input
                                 color="blue-gray"
                                 className="dark:text-gray-300"
-                                label="Confirmar Contraseña"
+                                label={t('Confirmar Contraseña')}
                                 size="lg"
                                 name="confirmPassword"
                                 type="password"
@@ -134,12 +136,12 @@ export const Registro = () => {
                             />
                         </CardBody>
                         <CardFooter className="pt-0">
-                            <Button variant="gradient" fullWidth type="submit">Registrarse</Button>
+                            <Button variant="gradient" fullWidth type="submit">{t('Registrarse')}</Button>
                             <Typography variant="small" className="mt-4 flex justify-center">
-                                ¿Ya eres cliente?
+                                {t('¿Ya te registraste?')}
                             </Typography>
                             <Link to="/login" onClick={() => openPopup("login")}>
-                                <Button color="white" size="lg" fullWidth>Iniciar sesión</Button>
+                                <Button color="white" size="lg" fullWidth>{t('Iniciar sesión')}</Button>
                             </Link>
                         </CardFooter>
                     </form>
@@ -159,7 +161,7 @@ export const Registro = () => {
                             Error
                         </Typography>
                         <Typography className="text-center">
-                            Las contraseñas no coinciden.
+                            {t('Las contraseñas no coinciden')}
                         </Typography>
                     </CardBody>
                     <CardFooter>
@@ -168,7 +170,7 @@ export const Registro = () => {
                             fullWidth
                             onClick={() => setShowErrorPopup(false)}
                         >
-                            Cerrar
+                            {t('Cerrar')}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -184,7 +186,7 @@ export const Registro = () => {
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
                     <CardBody className="flex flex-col items-center">
                         <Typography variant="h4" color="green">
-                            Registro Exitoso
+                            {t('Registro Exitoso')}
                         </Typography>
                     </CardBody>
                     <CardFooter>
@@ -193,7 +195,7 @@ export const Registro = () => {
                             fullWidth
                             onClick={() => setShowSuccessPopup(false)}
                         >
-                            Cerrar
+                            {t('Cerrar')}
                         </Button>
                     </CardFooter>
                 </Card>

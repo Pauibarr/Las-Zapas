@@ -6,8 +6,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ImContrast } from "react-icons/im";
 import { supabase } from "../bd/supabase";
 import { LanguageToggleButton } from "./LanguageToggleButton";
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
+  const { t } = useTranslation();
+
   const { session, setSession, isAdmin, setIsAdmin, openPopup, logout } = useGlobalContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para abrir/cerrar el menú móvil
   let navigate = useNavigate();
@@ -40,8 +43,8 @@ export const Header = () => {
 
   // Sirve para hacer un .map para las rutas. NO ENRUTA y se encesita si o si el enrutamiento del Router en App.jsx
   const menuRoutes = [
-    { path: "/hombre", label: "Hombre" },
-    { path: "/mujer", label: "Mujer" },
+    { path: "/hombre", label: t('Hombre') },
+    { path: "/mujer", label: t('Mujer') },
   ]
 
   return (
@@ -87,14 +90,14 @@ export const Header = () => {
                   to="/usuarios"
                   className="text-white hover:text-gray-400"
                 >
-                  Usuarios
+                  {t('Usuarios')}
                 </Link>
               </li>
             )}
             <li><LanguageToggleButton/></li>
             {session && (
               <li>
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button onClick={handleLogout}>{t('Cerrar Sesión')}</Button>
               </li>
             )}
           </ul>
@@ -151,7 +154,7 @@ export const Header = () => {
                   to="/usuarios"
                   className="text-white hover:text-gray-400"
                 >
-                  Usuarios
+                  {t('Usuarios')}
                 </Link>
               </li>
             )}
