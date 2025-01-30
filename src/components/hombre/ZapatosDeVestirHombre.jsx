@@ -8,22 +8,19 @@ export function ZapatosDeVestirHombre() {
     const { t } = useTranslation()
     const { 
         fetchTableData, 
-        zapass, 
-        setZapass, 
-        activePopup, 
-        openPopup, 
-        selectedItem, 
-        handleOpen, 
+        zapass,
+        setZapass,
+        activePopup,
+        openPopup,
         editData,
-        handleOpenImage, 
-        handleOpenEdit, 
-        deleteTableData, 
-        newZapatoBota, 
-        setNewZapatoBota, 
-        handleOpenPut, 
-        handleSubmit, 
-        handleChange, 
-        isAdmin 
+        handleOpenEdit,
+        deleteTableData,
+        newZapatoBota,
+        setNewZapatoBota,
+        handleOpenPut,
+        handleSubmit,
+        handleChange,
+        isAdmin
     } = useGlobalContext();
 
     const navigate = useNavigate();
@@ -38,7 +35,7 @@ export function ZapatosDeVestirHombre() {
 
     return (
         <div className="container mx-auto py-20 pb-16">
-            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">{t('Zapatos de Vestir para Hombre')}</h1>
+            <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4">{t('Zapatos para Hombre')}</h1>
             {zapass.length === 0 ? (
                 <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('No hay zapatos disponibles')}</p>
             ) : (

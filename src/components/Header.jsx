@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 export const Header = () => {
   const { t } = useTranslation();
 
-  const { session, setSession, isAdmin, setIsAdmin, openPopup, logout } = useGlobalContext();
+  const { isButtonDisabled, handleButtonClick, session, setSession, isAdmin, setIsAdmin, openPopup, logout } = useGlobalContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para abrir/cerrar el menú móvil
   let navigate = useNavigate();
   const location = useLocation(); // Hook para obtener la ruta actual
@@ -38,7 +38,9 @@ export const Header = () => {
   
   function handleLoginClick() {
     setIsMenuOpen(false); // Cierra el menú móvil al abrir el popup
-    openPopup("login");
+    handleButtonClick(() => {
+      openPopup("login");
+    });
   }
 
   // Sirve para hacer un .map para las rutas. NO ENRUTA y se encesita si o si el enrutamiento del Router en App.jsx
@@ -66,7 +68,7 @@ export const Header = () => {
               <ImContrast className="w-full dark:text-white text-blue-gray-800" />
             </button>
             {session && session.user && session.user.user_metadata && (
-              <li className="hover:text-gray-400">Bienvenido {session.user.user_metadata.name}</li>
+              <li className="hover:text-gray-400">{t('Bienvenido')} {session.user.user_metadata.name}</li>
             )}
             {!session && (
               <li className="hover:text-gray-400">
@@ -130,11 +132,11 @@ export const Header = () => {
         <nav className="md:hidden bg-gray-800 text-white p-4 mt-2 rounded-lg">
           <ul className="space-y-2">
             {session && session.user && session.user.user_metadata && (
-              <li className="hover:text-gray-400">Bienvenido {session.user.user_metadata.name}</li>
+              <li className="hover:text-gray-400">{t('Bienvenido')} {session.user.user_metadata.name}</li>
             )}
             {!session && (
               <li className="hover:text-gray-400">
-                <Button onClick={handleLoginClick}>Login</Button>
+                <Button disabled={isButtonDisabled} onClick={handleLoginClick}>Login</Button>
               </li>
             )}
             {session && (

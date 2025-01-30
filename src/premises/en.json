@@ -1,4 +1,5 @@
 {
+    "Bienvenido":"Welcome",
     "Registro":"Register",
     "Nombre":"Nombre",
     "Ingresa tu correo y contraseña para registrarte":"Enter your email and password to register",
@@ -6,6 +7,8 @@
     "Contraseña":"Password",
     "Confirmar Contraseña":"Password Confirm",
     "Registrarse":"Registre",
+    "Usuario Existente":"Existing User",
+    "El usuario ya está registrado. Intenta iniciar sesión":"The user is already registered. Try to log in",
     "¿Ya te registraste?":"Have you already registered?",
     "Iniciar sesión":"Login",
     "Las contraseñas no coinciden":"Passwords do not match",
@@ -32,8 +35,8 @@
     "Hombres":"Men",
     "Ver Más":"See More",
     
-    "Zapatos para Hombres":"Shoes for Men",
-    "Zapatos para Mujeres":"Shoes for Women",
+    "Zapatos para Hombre":"Shoes for Men",
+    "Zapatos para Mujer":"Shoes for Women",
     "Explora nuestra colección exclusiva para hombres: Botas, Zapatillas y Zapatos de vestir":"Explore our exclusive collection for men: Boots, Sneakers and Dress Shoes",
     "Explora nuestra colección exclusiva para mujeres: Botas, Zapatillas y Zapatos de vestir":"Explore our exclusive collection for women: Boots, Sneakers and Dress Shoes",
     "Botas":"Boots",

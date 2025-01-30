@@ -1,4 +1,5 @@
 {
+    "Bienvenido":"Bienvenido",
     "Registro":"Registro",
     "Ingresa tu correo y contraseña para registrarte":"Ingresa tu correo y contraseña para registrarte",
     "Nombre":"Nombre",
@@ -6,6 +7,8 @@
     "Contraseña":"Contraseña",
     "Confirmar Contraseña":"Confirmar Contraseña",
     "Registrarse":"Registrarse",
+    "Usuario Existente":"Usuario Exstente",
+    "El usuario ya está registrado. Intenta iniciar sesión":"El usuario ya está registrado. Intenta iniciar sesión",
     "¿Ya te registraste?":"¿Ya te registraste?",
     "Iniciar sesión":"Iniciar sesión",
     "Las contraseñas no coinciden":"Las contraseñas no coinciden",
@@ -32,8 +35,8 @@
     "Hombres":"Hombres",
     "Ver Más":"Ver Más",
 
-    "Zapatos para Hombres":"Zapatos para Hombres",
-    "Zapatos para Mujeres":"Zapatos para Mujeres",
+    "Zapatos para Hombre":"Zapatos para Hombre",
+    "Zapatos para Mujer":"Zapatos para Mujer",
     "Explora nuestra colección exclusiva para hombres: Botas, Zapatillas y Zapatos de vestir":"Explora nuestra colección exclusiva para hombres: Botas, Zapatillas y Zapatos de vestir",
     "Explora nuestra colección exclusiva para mujeres: Botas, Zapatillas y Zapatos de vestir":"Explora nuestra colección exclusiva para mujeres: Botas, Zapatillas y Zapatos de vestir",
     "Botas":"Botas",

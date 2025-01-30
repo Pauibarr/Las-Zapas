@@ -7,22 +7,20 @@ import { useTranslation } from 'react-i18next';
 export function ZapatillasMujer() {
     const { t } = useTranslation()
     const { 
-        fetchTableData, 
-        zapass, 
-        setZapass, 
-        activePopup, 
-        openPopup, 
-        selectedItem, 
-        handleOpen, 
-        editData, 
-        handleOpenEdit, 
-        deleteTableData, 
-        newZapatoBota, 
-        setNewZapatoBota, 
-        handleOpenPut, 
-        handleSubmit, 
-        handleChange, 
-        isAdmin 
+        fetchTableData,
+        zapass,
+        setZapass,
+        activePopup,
+        openPopup,
+        editData,
+        handleOpenEdit,
+        deleteTableData,
+        newZapatoBota,
+        setNewZapatoBota,
+        handleOpenPut,
+        handleSubmit,
+        handleChange,
+        isAdmin
     } = useGlobalContext();
 
     const navigate = useNavigate();

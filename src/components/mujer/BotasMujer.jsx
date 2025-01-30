@@ -1,26 +1,26 @@
 import { Dialog, Card, CardBody, CardFooter, Input, Typography, Button } from '@material-tailwind/react';
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from '../../context/GlobalContext';
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 
 export function BotasMujer() {
     const { t } = useTranslation()
     const { 
-        fetchTableData, 
-        zapass, 
-        setZapass, 
-        activePopup, 
-        openPopup, 
-        selectedItem, 
-        handleOpenEdit, 
-        deleteTableData, 
-        newZapatoBota, 
-        setNewZapatoBota, 
-        handleOpenPut, 
-        handleSubmit, 
-        handleChange, 
-        isAdmin 
+        fetchTableData,
+        zapass,
+        setZapass,
+        activePopup,
+        openPopup,
+        editData,
+        handleOpenEdit,
+        deleteTableData,
+        newZapatoBota,
+        setNewZapatoBota,
+        handleOpenPut,
+        handleSubmit,
+        handleChange,
+        isAdmin
     } = useGlobalContext();
 
     const navigate = useNavigate();
@@ -31,7 +31,7 @@ export function BotasMujer() {
             setZapass(data);
         };
         fetchZapatosBotas();
-    }, []);
+    }, [fetchTableData]);
 
     return (
         <div className="container mx-auto py-20 pb-16">
@@ -43,13 +43,13 @@ export function BotasMujer() {
                     {zapass.map((zapatoBota) => (
                         <div
                             key={zapatoBota.id}
-                            className="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full cursor-pointer transition duration-150 hover:scale-105"
-                            onClick={() => navigate(`/detalle-bota/${zapatoBota.id}`)}
+                            className="bg-gray-200 dark:bg-gray-800 p-4 rounded-lg shadow-md flex flex-col h-full cursor-pointer"
+                            onClick={() => navigate(`/comprar/BotasYBotinesMujer/${zapatoBota.nombre}`)}
                         >
                             <img
                                 src={zapatoBota.imagen || "https://via.placeholder.com/150"}
                                 alt={zapatoBota.nombre}
-                                className="w-full h-48 object-cover mb-4 rounded-md"
+                                className="w-full h-48 object-cover mb-4 rounded-md transition duration-150 hover:scale-x-105 hover:scale-y-105"
                             />
                             <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoBota.nombre}</h2>
                             <div className="flex flex-col flex-grow">
@@ -59,8 +59,8 @@ export function BotasMujer() {
                             </div>
                             {isAdmin && (
                                 <div className="mt-4 flex justify-between">
-                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit(zapatoBota); }}>{t('Editar')}</Button>
-                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData(zapatoBota.id); }}>{t('Borrar')}</Button>
+                                    <Button size="sm" color="blue" onClick={(e) => { e.stopPropagation(); handleOpenEdit("BotasYBotinesMujer", zapatoBota); }}>{t('Editar')}</Button>
+                                    <Button size="sm" color="red" onClick={(e) => { e.stopPropagation(); deleteTableData("BotasYBotinesMujer", zapatoBota.id); }}>{t('Borrar')}</Button>
                                 </div>
                             )}
                         </div>
@@ -76,12 +76,12 @@ export function BotasMujer() {
 
             <Dialog open={activePopup === "newZapatoBota" || activePopup === "editZapatoBota"} handler={openPopup} size="xs" className="bg-transparent shadow-none">
                 <Card className="dark:bg-blue-gray-900 dark:text-white mx-auto w-full max-w-[24rem]">
-                    <form onSubmit={(editZapatoBota) => {
-                        editZapatoBota.preventDefault();
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
                         handleSubmit("BotasYBotinesMujer", newZapatoBota);
                     }}>
                         <CardBody className="flex flex-col gap-4">
-                            <Typography variant="h4">{selectedItem ? 'Editar Bota' : 'Añadir Nueva Bota'}</Typography>
+                            <Typography variant="h4">{editData ? 'Editar Bota' : 'Añadir Nueva Bota'}</Typography>
                             <Input
                                 label={t('Nombre')}
                                 size="lg"
@@ -142,7 +142,7 @@ export function BotasMujer() {
                         </CardBody>
                         <CardFooter className="pt-0">
                             <Button variant="gradient" fullWidth type="submit">
-                                {selectedItem ? t('Actualizar Bota') : t('Añadir Bota')}
+                                {editData ? t('Actualizar Botas') : t('Añadir Botas')}
                             </Button>
                         </CardFooter>
                     </form>
