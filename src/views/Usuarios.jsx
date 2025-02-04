@@ -75,69 +75,70 @@ export const Usuarios = () => {
                                     <span
                                         className={`inline-block px-2 py-1 rounded-full text-sm font-medium ${
                                             user.role === "admin"
-                                                ? "bg-green-200 text-green-800"
-                                                : "bg-yellow-200 text-yellow-800"
+                                                ? "bg-gray-800 text-gray-200"
+                                                : "bg-gray-200 text-gray-800"
                                         }`}
                                     >
                                         {t(`roles.${user.role}`)}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4">
-                                    <Button
-                                        size="sm"
-                                        color="red"
-                                        onClick={() => deleteUser(user.id)}
-                                        className="hover:bg-red-700 mr-2"
-                                    >
-                                        {t('Eliminar')}
-                                    </Button>
-                                    {editUserId === user.id ? (
-                                        <>
+                                    <div className="flex items-center justify-between space-x-4">
+                                        <Button
+                                            size="sm"
+                                            color="red"
+                                            onClick={() => deleteUser(user.id)}
+                                            className="hover:bg-red-700"
+                                        >
+                                            {t('Eliminar')}
+                                        </Button>
+                                        {editUserId === user.id ? (
+                                            <>
+                                                <Button
+                                                    size="sm"
+                                                    color="green"
+                                                    onClick={() => saveNameChange(user.id)}
+                                                    className="hover:bg-green-700"
+                                                >
+                                                    {t('Guardar')}
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    color="gray"
+                                                    onClick={cancelEdit}
+                                                    className="hover:bg-gray-700"
+                                                >
+                                                    {t('Cancelar')}
+                                                </Button>
+                                            </>
+                                        ) : (
                                             <Button
                                                 size="sm"
-                                                color="green"
-                                                onClick={() => saveNameChange(user.id)}
-                                                className="hover:bg-green-700 mr-2"
+                                                color="blue"
+                                                onClick={() => {
+                                                    setEditUserId(user.id);
+                                                    setNewName(user.name_user);
+                                                }}
+                                                className="bg-green-700 hover:bg-green-800"
                                             >
-                                                {t('Guardar')}
+                                                {t('Editar Nombre')}
                                             </Button>
-                                            <Button
-                                                size="sm"
-                                                color="gray"
-                                                onClick={cancelEdit}
-                                                className="hover:bg-gray-700 mr-2"
-                                            >
-                                                {t('Cancelar')}
-                                            </Button>
-                                        </>
-                                    ) : (
+                                        )}
                                         <Button
                                             size="sm"
                                             color="blue"
-                                            onClick={() => {
-                                                setEditUserId(user.id);
-                                                setNewName(user.name_user);
-                                            }}
-                                            className="hover:bg-blue-700 mr-2"
+                                            onClick={() =>
+                                                updateUser(user.id, {
+                                                    role: user.role === "admin" ? "user" : "admin",
+                                                })
+                                            }
+                                            className="hover:bg-blue-700 w-[100px]"
                                         >
-                                            {t('Editar Nombre')}
+                                            {user.role === "admin"
+                                                ? t('Convertir a Usuario')
+                                                : t('Hacer Admin')}
                                         </Button>
-                                    )}
-                                    <Button
-                                        size="sm"
-                                        color="blue"
-                                        onClick={() =>
-                                            updateUser(user.id, {
-                                                role: user.role === "admin" ? "user" : "admin",
-                                            })
-                                        }
-                                        className="hover:bg-blue-700"
-                                    >
-                                        {user.role === "admin"
-                                            ? t('Convertir a Usuario')
-                                            : t('Hacer Admin')
-                                        }
-                                    </Button>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

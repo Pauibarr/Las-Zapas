@@ -129,7 +129,7 @@ export const Header = () => {
 
       {/* Menú desplegable para pantallas pequeñas */}
       {isMenuOpen && (
-        <nav className="md:hidden bg-gray-800 text-white p-4 mt-2 rounded-lg">
+        <nav className="md:hidden bg-gray-800 text-white text-center p-4 mt-2 rounded-lg">
           <ul className="space-y-2">
             {session && session.user && session.user.user_metadata && (
               <li className="hover:text-gray-400">{t('Bienvenido')} {session.user.user_metadata.name}</li>

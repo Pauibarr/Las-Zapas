@@ -48,16 +48,16 @@ export function Hombre() {
   return (
     <div className="relative flex flex-col items-center py-16">
       <h2 className="dark:text-white text-black md:text-5xl text-4xl font-extrabold mb-8 mt-6 text-center">
-        {t('Zapatos para Hombres')}
+        {t('Zapatos para Hombre')}
       </h2>
-      <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl">
+      <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl w-[600px]">
         {t('Explora nuestra colección exclusiva para hombres: Botas, Zapatillas y Zapatos de vestir')}.
       </p>
 
-      <div className="text-center grid md:grid-cols-3 gap-8 px-4">
+      <div className="text-center grid md:grid-cols-3 gap-20 px-4">
         {/* Botas */}
         {botasHombre.map((Bota, index) => (
-          <div key={Bota?.id || `botas-${index}`} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group">
+          <div key={Bota?.id || `botas-${index}`} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group w-[400px] md:w-[250px] lg:w-[330px] xl:w-[390px]">
             <button className="w-full transition duration-300 hover:scale-105">
               <img
                 onClick={() => handleOpen(Bota, "botasHombre")}
@@ -91,7 +91,7 @@ export function Hombre() {
         ))}
         {/* Zapatillas */}
         {zapatillasHombre.map((Zapatilla, index) => (
-          <div key={Zapatilla?.id || `zapatillas-${index}`} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group">
+          <div key={Zapatilla?.id || `zapatillas-${index}`} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group w-[400px] md:w-[250px] lg:w-[330px] xl:w-[390px]">
             <button className="w-full transition duration-300 hover:scale-105">
               <img
                 onClick={() => handleOpen(Zapatilla, "zapatillasHombre")}
@@ -125,7 +125,7 @@ export function Hombre() {
         ))}
         {/* Zapatos de vestir */}
         {zapatosHombre.map((Zapato, index) => (
-          <div key={Zapato?.id || `zapatos-${index}`} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group">
+          <div key={Zapato?.id || `zapatos-${index}`} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group w-[400px] md:w-[250px] lg:w-[330px] xl:w-[390px]">
             <button className="w-full transition duration-300 hover:scale-105">
               <img
                 onClick={() => handleOpen(Zapato, "vestirHombre")}

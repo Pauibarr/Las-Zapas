@@ -31,7 +31,6 @@ export const GlobalProvider = ({ children }) => {
         nombre: "",
         created_at: "",
         descripcion: "",
-        talla: "",
         imagen: "",
         precio: "",
     });
@@ -210,7 +209,6 @@ export const GlobalProvider = ({ children }) => {
             nombre: "",
             created_at: "",
             descripcion: "",
-            talla: "",
             imagen: "",
             precio: "",
         })
@@ -269,7 +267,6 @@ export const GlobalProvider = ({ children }) => {
                 nombre: "",
                 created_at: "",
                 descripcion: "",
-                talla: "",
                 imagen: "",
                 precio: "",
             });

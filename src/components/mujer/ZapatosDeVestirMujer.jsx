@@ -55,7 +55,6 @@ export function ZapatosDeVestirMujer() {
                             <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoBota.nombre}</h2>
                             <div className="flex flex-col flex-grow">
                                 <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{t('Descripción')}: {zapatoBota.descripcion}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{t('Talla')}: {zapatoBota.talla}</p>
                                 <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('Precio')}: {zapatoBota.precio}</p>
                             </div>
                             {isAdmin && (
@@ -108,16 +107,6 @@ export function ZapatosDeVestirMujer() {
                                 name="descripcion"
                                 required
                                 value={newZapatoBota.descripcion}
-                                onChange={handleChange}
-                                className="dark:text-gray-300"
-                            />
-                            <Input
-                                label={t('Talla')}
-                                size="lg"
-                                color="blue-gray"
-                                name="talla"
-                                required
-                                value={newZapatoBota.talla}
                                 onChange={handleChange}
                                 className="dark:text-gray-300"
                             />

@@ -19,13 +19,13 @@ export function Home() {
         <h2 className="dark:text-white text-black md:text-5xl text-4xl font-extrabold mb-8 mt-6 text-center">
           {t('Bienvenido a Las Zapas')}
         </h2>
-        <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl">
+        <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl w-[600px]">
           {t('Descubre nuestra colección de zapatillas para todas las ocasiones. ¡Encuentra tus favoritas ahora!')}
         </p>
 
-        <div className="text-center grid md:grid-cols-2 gap-8 px-4">
+        <div className="text-center grid md:grid-cols-2 gap-20 px-4">
           {/* Categoría: Hombres */}
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group">
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group w-[500px] md:w-[300px] lg:w-[500px] xl:w-[610px]">
             <button className="w-full transition duration-300 hover:scale-105">
               <img
                 onClick={() => handleOpen(null, "zapatoHombre")} // Pasamos null como item
@@ -73,7 +73,7 @@ export function Home() {
           </div>
 
           {/* Categoría: Mujeres */}
-          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group">
+          <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden group w-[500px] md:w-[300px] lg:w-[500px] xl:w-[610px]">
             <button className="w-full transition duration-300 hover:scale-105">
               <img
                 onClick={() => handleOpen(null, "zapatoMujer")} // Pasamos null como item
