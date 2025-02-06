@@ -17,7 +17,7 @@ export function Home() {
   return (
       <div className="relative flex flex-col items-center py-16">
         <h2 className="dark:text-white text-black md:text-5xl text-4xl font-extrabold mb-8 mt-6 text-center">
-          {t('Bienvenido a Las Zapas')}
+          {t('Bienvenido a Las Zapas')}prueba
         </h2>
         <p className="dark:text-gray-200 text-gray-700 text-lg mb-12 text-center max-w-2xl w-[600px]">
           {t('Descubre nuestra colección de zapatillas para todas las ocasiones. ¡Encuentra tus favoritas ahora!')}
