@@ -72,8 +72,7 @@ export function Comprar() {
 
   return (
     <>
-      <div className="container mx-auto py-20 px-4">
-      <Card className="w-full max-w-8xl mx-auto">
+      <Card className="container mx-auto py-20 px-4">
         <CardBody className="flex flex-col md:flex-row gap-8 items-start">
           <CardBody className="w-full md:w-1/2">
             <img
@@ -106,7 +105,7 @@ export function Comprar() {
               </button>
 
               {isTallasMenuOpen && (
-                <div ref={menuRef} className="absolute z-10 top-full left-0 md:w-10 sm:w-20 lg:w-20 xl:w-28 rounded-md shadow-lg bg-gray-100 border border-gray-300 mt-1 text-sm">
+                <div ref={menuRef} className="absolute z-10 top-full left-0 w-36 rounded-md shadow-lg bg-gray-100 border border-gray-300 mt-1 text-sm">
                   <div className="max-h-48 overflow-y-auto">
                     {tallas.map((talla) => (
                       <div
@@ -124,12 +123,13 @@ export function Comprar() {
               )}
             </div>
 
-            <div className="mr-10 ml-10 mt-4 p-2 bg-gray-100 rounded-md shadow-lg border border-gray-300 max-h-48 overflow-y-auto">
+            {/* Contenedor fijo con tallas seleccionadas */}
+            <div className="absolute right-3 top-20 w-40 p-2 bg-gray-100 rounded-md shadow-lg border border-gray-300 max-h-48 overflow-y-auto">
               <Typography variant="h6" className="text-center mb-2">Tallas Seleccionadas</Typography>
               {selectedTallas.map((talla, index) => (
-                <div key={index} className="ml-5 mr-5 flex justify-between items-center px-2 py-1 bg-white text-gray-800 rounded-md mb-1">
-                  <p className="ml-20">{talla}</p>
-                  <button onClick={() => handleRemoveTalla(index)} className="mr-20 text-red-500 font-bold">✕</button>
+                <div key={index} className="flex justify-between items-center px-2 py-1 bg-white text-gray-800 rounded-md mb-1">
+                  {talla}
+                  <button onClick={() => handleRemoveTalla(index)} className="text-red-500 font-bold">✕</button>
                 </div>
               ))}
             </div>
@@ -151,7 +151,6 @@ export function Comprar() {
           </CardBody>
         </CardBody>
       </Card>
-      </div>
 
       <Dialog size="xs" open={showSuccessPopup} handler={() => setShowSuccessPopup(false)}>
         <Card className="mx-auto w-full max-w-[24rem]">
