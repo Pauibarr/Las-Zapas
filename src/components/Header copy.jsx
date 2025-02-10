@@ -72,7 +72,7 @@ export const Header = () => {
               <>
                 {menuRoutes.map(item => 
                   location.pathname !== item.path && (
-                    <li key={item.path} className="hover:text-gray-400 font-semibold md:text-[15px] lg:text-[16px] xl:text-[16px] transition duration-150 hover:scale-105">
+                    <li key={item.path} className="hover:text-gray-400 font-semibold md:text-[15px] lg:text-[16px] xl:text-[16px]">
                       <Link to={item.path}>{item.label}</Link>
                     </li>
                   )
@@ -80,10 +80,10 @@ export const Header = () => {
               </>
             )}
             {isAdmin && (
-              <li className="transition duration-150 hover:scale-105">
+              <li>
                 <Link
                   to="/usuarios"
-                  className="hover:text-gray-400 font-semibold md:text-[15px] lg:text-[16px] xl:text-[16px]"
+                  className="text-white hover:text-gray-400 font-semibold md:text-[15px] lg:text-[16px] xl:text-[16px]"
                 >
                   {t('Usuarios')}
                 </Link>
