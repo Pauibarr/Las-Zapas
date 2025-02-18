@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import {
   Dialog,
   Button,
@@ -23,6 +23,16 @@ export function Comprar() {
   const {session}= useGlobalContext();
   const menuRef = useRef(null);
 
+  const obtenerSeccionProducto = (tableName) => {
+    if (tableName === "ZapatosDeVestirHombre") return "Zapatos para Hombre";
+    if (tableName === "BotasYBotinesHombre") return "Botas y Botines para Hombre";
+    if (tableName === "ZapatillasHombre") return "Zapatillas para Hombre";
+    if (tableName === "ZapatosDeVestirMujer") return "Zapatos para Mujer";
+    if (tableName === "BotasYBotinesMujer") return "Botas y Botines para Mujer";
+    if (tableName === "ZapatillasMujer") return "Zapatillas para Mujer";
+    return "Otras categorías"; // En caso de que agregues más tablas en el futuro
+  };
+
   useEffect(() => {
     const fetchItem = async () => {
       try {
@@ -39,9 +49,10 @@ export function Comprar() {
       } finally {
         setLoading(false);
       }
-    };
+    };  
     fetchItem();
-  }, [tableName, nombre]);
+  }, [tableName, nombre]); // Aseguramos que solo se ejecute cuando estas dependencias cambian
+  
 
   const tallas = [37, 38, 39, 40, 41, 42, 43, 44, 45];
 
@@ -67,26 +78,30 @@ export function Comprar() {
     setSelectedTallas(newTallas);
   };
 
-  const handleComprar = async () => {
+  const handleComprar = useCallback(async () => {
     if (selectedTallas.length === 0) return;
-
+  
+    let seccionProducto = obtenerSeccionProducto(tableName);
+  
     try {
-        const { data, error } = await supabase
-            .from("Compras")
-            .insert(selectedTallas.map(talla => ({
-                uid: session?.user.id,
-                puid: item.id,
-                tabla_producto: tableName, // Guardamos la tabla de origen
-                created_at: new Date()
-            })));
-
-        if (error) throw error;
-
-        setShowSuccessPopup(true);
+      const { error } = await supabase
+        .from("Compras")
+        .insert(selectedTallas.map(talla => ({
+          uid: session?.user.id,
+          puid: item?.id,
+          tabla_producto: tableName,
+          seccion: seccionProducto,
+          created_at: new Date()
+        })));
+  
+      if (error) throw error;
+  
+      setShowSuccessPopup(true);
     } catch (error) {
-        console.error("Error al guardar la compra:", error.message);
+      console.error("Error al guardar la compra:", error.message);
     }
-};
+  }, [selectedTallas, session, item, tableName]); // Solo cambia si estas dependencias cambian
+  
 
 
   const totalPrecio = selectedTallas.length * (parseFloat(item?.precio) || 0);

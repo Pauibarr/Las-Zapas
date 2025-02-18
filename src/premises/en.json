@@ -85,5 +85,18 @@
     "roles":{
         "admin":"Admin",
         "user":"User"
-    }
+    },
+    "Mis Compras":"My Purchases",
+    "Sección":"Section",
+    "Devolución":"Refund",
+    "Motivo":"Reason",
+    "Motivo de la devolución":"Reason for refund",
+    "¿Seguro que quieres devolver el producto?":"Are you sure you want to refund the product?",
+    "Sí, estoy seguro":"Yes, im sure",
+    "No quiero devolver":"I don't want to refund",
+    "Editar el Motivo":"Edit the Reason",
+    "Cancelar Devolución":"Cancel Refund",
+    "Estado":"Status",
+    "No tienes compras registradas":"You have no registered purchases",
+    "No hay devoluciones pendientes":"There are no pending refunds"
 }

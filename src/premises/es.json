@@ -86,5 +86,18 @@
     "roles":{
         "admin":"Administrador",
         "user":"Usuario"
-    }
+    },
+    "Mis Compras":"Mis Compras",
+    "Sección":"Sección",
+    "Devolución":"Devolución",
+    "Motivo":"Motivo",
+    "Motivo de la devolución":"Motivo de la devolución",
+    "¿Seguro que quieres devolver el producto?":"¿Seguro que quieres devolver el producto?",
+    "Sí, estoy seguro":"Sí, estoy seguro",
+    "No quiero devolver":"No quiero devolver",
+    "Editar el Motivo":"Editar el Motivo",
+    "Cancelar Devolución":"Cancelar Devolución",
+    "Estado":"Estado",
+    "No tienes compras registradas":"No tienes compras registradas",
+    "No hay devoluciones pendientes":"No hay devoluciones pendientes"
 }
