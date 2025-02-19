@@ -10,8 +10,11 @@ import {
 } from "@material-tailwind/react";
 import { supabase } from "../bd/supabase";
 import { useGlobalContext } from "../context/GlobalContext";
+import { useTranslation } from "react-i18next";
 
 export function Comprar() {
+  const { t } = useTranslation();
+
   const { tableName, nombre } = useParams();
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [item, setItem] = useState(null);
@@ -91,6 +94,7 @@ export function Comprar() {
           puid: item?.id,
           tabla_producto: tableName,
           seccion: seccionProducto,
+          talla: talla,
           created_at: new Date()
         })));
   
@@ -113,7 +117,7 @@ export function Comprar() {
     <>
     <div className="min-h-screen bg-gradient-to-bl from-gray-200 dark:from-gray-800">
       <div className="container mx-auto py-20 px-4">
-      <Card className="w-full max-w-8xl mx-auto">
+      <Card className="w-full max-w-8xl mx-auto bg-gradient-to-bl bg-gray-400 dark:bg-gray-600">
         <CardBody className="flex flex-col md:flex-row gap-8 items-start">
           <CardBody className="w-full md:w-1/2">
             <img
@@ -134,15 +138,15 @@ export function Comprar() {
             <Typography variant="lead" className="mb-4">
               {item.descripcion}
             </Typography>
-            <Typography className="text-xl font-semibold mb-4">Selecciona las tallas:</Typography>
+            <Typography className="text-xl font-semibold mb-4">{t('Selecciona las Tallas')}:</Typography>
 
             <div className="relative w-full">
-              <label className="text-xs text-gray-400">Selecciona Tallas</label>
+              <label className="text-xs text-gray-400">{t('Tallas')}</label>
               <button
                 onClick={() => setIsTallasMenuOpen(!isTallasMenuOpen)}
                 className="py-2.5 px-3 w-full border border-gray-300 focus:border-blue-500 flex items-center justify-between rounded"
               >
-                {selectedTallas.length > 0 ? selectedTallas.join(", ") : "Seleccionar tallas"}
+                {selectedTallas.length > 0 ? selectedTallas.join(", ") : t("Numero de Tallas")}
               </button>
 
               {isTallasMenuOpen && (
@@ -165,7 +169,7 @@ export function Comprar() {
             </div>
 
             <div className="mr-10 ml-10 mt-4 p-2 bg-gray-100 rounded-md shadow-lg border border-gray-300 max-h-48 overflow-y-auto">
-              <Typography variant="h6" className="text-center mb-2">Tallas Seleccionadas</Typography>
+              <Typography variant="h6" className="text-center mb-2">{t('Tallas Seleccionadas')}</Typography>
               {selectedTallas.map((talla, index) => (
                 <div key={index} className="ml-5 mr-5 flex justify-between items-center px-2 py-1 bg-white text-gray-800 rounded-md mb-1">
                   <p className="ml-20">{talla}</p>
@@ -175,7 +179,7 @@ export function Comprar() {
             </div>
 
             <Typography className="text-xl font-semibold text-center mt-10">
-              Precio total: {totalPrecio.toFixed(2)} €
+              Total {t('Precio')}: {totalPrecio.toFixed(2)} €
             </Typography>
             <Typography className="text-center">
               <Button
@@ -185,7 +189,7 @@ export function Comprar() {
                 onClick={handleComprar}
                 disabled={selectedTallas.length === 0}
               >
-                Comprar Ahora
+                {t('Comprar Ahora')}
               </Button>
             </Typography>
           </CardBody>
@@ -197,13 +201,13 @@ export function Comprar() {
         <Card className="mx-auto w-full max-w-[24rem]">
           <CardBody className="flex flex-col items-center">
             <Typography variant="h4" color="green">
-              Compra realizada con éxito.
+              {t('Compra realizada con éxito')}
             </Typography>
             <Typography className="mb-3 font-normal text-center">
-              Has comprado {selectedTallas.length} talla(s). Total: {totalPrecio.toFixed(2)} €
+            {t('Has comprado {{count}} {{talla}}', { count: selectedTallas.length, talla: t('talla', { count: selectedTallas.length }) })} Total: {totalPrecio.toFixed(2)} €
             </Typography>
             <Typography className="mb-3 font-normal text-center">
-              Que tenga un buen día 😁
+              {t('Que tenga un buen dia')} 😁
             </Typography>
           </CardBody>
           <CardFooter>

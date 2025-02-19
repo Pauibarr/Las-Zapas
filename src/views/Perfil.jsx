@@ -50,17 +50,17 @@ export function Perfil() {
   };
 
   const handleEnviarDevolucion = async () => {
-    if (!motivo.trim()) return setErrorMotivo("Por favor, ingresa un motivo.");
-    if (!session?.user?.id) return showAlert("Usuario no autenticado.", "red");
+    if (!motivo.trim()) return setErrorMotivo(t("Por favor, ingresa un motivo"));
+    if (!session?.user?.id) return showAlert(t("Usuario no autenticado"), "red");
     setLoading(true);
     try {
       const { error } = await supabase.from("Devoluciones").insert([{ user_id: session.user.id, compra_id: selectedCompra.id, motivo, estado: "Pendiente" }]);
       if (error) throw error;
-      showAlert("Devolución enviada.", "green");
+      showAlert(t("Devolución enviada"), "green");
       setShowModal(false);
       setDevoluciones({ ...devoluciones, [selectedCompra.id]: { motivo, estado: "Pendiente" } });
     } catch (error) {
-      showAlert("Error al solicitar devolución.", "red");
+      showAlert(t("Error al solicitar devolución"), "red");
     } finally {
       setLoading(false);
     }
@@ -74,16 +74,16 @@ export function Perfil() {
   };
 
   const handleUpdateDevolucion = async () => {
-    if (!motivo.trim()) return setErrorMotivo("Ingresa un motivo.");
+    if (!motivo.trim()) return setErrorMotivo("Ingresa un motivo");
     setLoading(true);
     try {
       const { error } = await supabase.from("Devoluciones").update({ motivo }).eq("compra_id", selectedCompra.id);
       if (error) throw error;
-      showAlert("Motivo actualizado.", "green");
+      showAlert(t("Motivo actualizado"), "green");
       setShowModal(false);
       setDevoluciones({ ...devoluciones, [selectedCompra.id]: { ...devoluciones[selectedCompra.id], motivo } });
     } catch (error) {
-      showAlert("Error al actualizar.", "red");
+      showAlert(t("Error al actualizar el motivo"), "red");
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ export function Perfil() {
     try {
       const { error } = await supabase.from("Devoluciones").delete().eq("compra_id", compraId);
       if (error) throw error;
-      showAlert("Devolución cancelada.", "green");
+      showAlert(t("Devolución cancelada"), "green");
       const newDevol = { ...devoluciones };
       delete newDevol[compraId];
       setDevoluciones(newDevol);
@@ -118,10 +118,11 @@ export function Perfil() {
                 <div className="ml-5 flex-1">
                   <h3 className="text-lg font-semibold text-gray-900">{compra.producto?.nombre}</h3>
                   <p className="text-gray-600">{compra.created_at.split("T")[0]}</p>
+                  <p className="text-gray-900">{t('Talla')} {compra.talla}</p>
                   <p className="text-gray-900 font-bold">${compra.producto?.precio}</p>
                   {devoluciones[compra.id] ? (
                     <div className="mt-2">
-                      <p className="text-sm text-yellow-800">{t('Estado')}: {devoluciones[compra.id].estado}</p>
+                      <p className="text-sm text-yellow-800">{t('Estado')}: {t(devoluciones[compra.id].estado)}</p>
                       <div className="flex space-x-2 mt-2">
                         <Button size="sm" color="blue" onClick={() => handleEditDevolucion(compra)}>{t('Editar el Motivo')}</Button>
                         <Button size="sm" color="red" onClick={() => handleCancelDevolucion(compra.id)}>{t('Cancelar Devolución')}</Button>
