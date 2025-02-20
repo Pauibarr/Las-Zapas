@@ -106,7 +106,7 @@ export function Perfil() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-bl from-gray-200 dark:from-gray-800 p-6 flex justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-bl from-gray-200 dark:from-gray-800 p-6 pt-24 pb-20 flex justify-center items-center">
       <div className="max-w-3xl w-full bg-white shadow-2xl rounded-lg p-8 border border-gray-200">
         <h1 className="text-3xl font-semibold text-gray-900 border-b pb-4 mb-6">{t('Perfil')}</h1>
         <h2 className="text-2xl font-medium text-gray-800 mb-4">{t('Mis Compras')}</h2>
@@ -122,7 +122,17 @@ export function Perfil() {
                   <p className="text-gray-900 font-bold">${compra.producto?.precio}</p>
                   {devoluciones[compra.id] ? (
                     <div className="mt-2">
-                      <p className="text-sm text-yellow-800">{t('Estado')}: {t(devoluciones[compra.id].estado)}</p>
+                      <p className="text-sm font-semibold text-gray-800">
+                        {t('Estado')}: <span className={
+                          devoluciones[compra.id]?.estado === "Devuelto"
+                            ? "text-green-500"
+                            : devoluciones[compra.id]?.estado === "Denegado"
+                            ? "text-red-500"
+                            : "text-blue-500"
+                        }>
+                          {t(devoluciones[compra.id]?.estado)}
+                        </span>
+                      </p>
                       <div className="flex space-x-2 mt-2">
                         <Button size="sm" color="blue" onClick={() => handleEditDevolucion(compra)}>{t('Editar el Motivo')}</Button>
                         <Button size="sm" color="red" onClick={() => handleCancelDevolucion(compra.id)}>{t('Cancelar Devolución')}</Button>

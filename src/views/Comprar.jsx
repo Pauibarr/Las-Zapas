@@ -132,19 +132,19 @@ export function Comprar() {
           </CardBody>
 
           <CardBody className="w-full md:w-1/2">
-            <Typography variant="h2" className="font-bold mb-4">
+            <Typography variant="h2" className="font-bold mb-4 dark:text-gray-100">
               {item.nombre}
             </Typography>
-            <Typography variant="lead" className="mb-4">
-              {item.descripcion}
+            <Typography variant="lead" className="mb-4 dark:text-gray-100">
+              {t('Descripción')}: {item.descripcion}
             </Typography>
-            <Typography className="text-xl font-semibold mb-4">{t('Selecciona las Tallas')}:</Typography>
+            <Typography className="text-xl font-semibold mb-4 dark:text-gray-100">{t('Selecciona las Tallas')}:</Typography>
 
             <div className="relative w-full">
-              <label className="text-xs text-gray-400">{t('Tallas')}</label>
+              <label className="text-xs text-gray-600 dark:text-gray-400">{t('Tallas')}</label>
               <button
                 onClick={() => setIsTallasMenuOpen(!isTallasMenuOpen)}
-                className="py-2.5 px-3 w-full border border-gray-300 focus:border-blue-500 flex items-center justify-between rounded"
+                className="py-2.5 px-3 w-full border border-gray-100 focus:border-gray-900 flex items-center justify-between rounded dark:text-gray-200"
               >
                 {selectedTallas.length > 0 ? selectedTallas.join(", ") : t("Numero de Tallas")}
               </button>
@@ -178,7 +178,7 @@ export function Comprar() {
               ))}
             </div>
 
-            <Typography className="text-xl font-semibold text-center mt-10">
+            <Typography className="text-xl font-semibold text-center mt-10 dark:text-gray-100">
               Total {t('Precio')}: {totalPrecio.toFixed(2)} €
             </Typography>
             <Typography className="text-center">
