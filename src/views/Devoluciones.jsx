@@ -115,7 +115,7 @@ if (usuariosError) {
 
   return (
     <div className="min-h-screen bg-gradient-to-bl from-gray-100 dark:from-gray-800 p-6 pb-20 flex flex-col items-center">
-  <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 text-center mb-6 md:mt-24 m-14">
+  <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 text-center mb-6 md:mt-24 mt-14">
   {t('Gestión de Devoluciones')}
 </h3>
 
@@ -138,44 +138,69 @@ if (usuariosError) {
           </div>
 
           {/* Datos en Responsive Grid */}
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <Typography className="text-gray-600 font-semibold text-sm">
-              {t('Solicitado por')}: <span className="font-medium text-gray-500">{dev.usuario_nombre}</span>
-            </Typography>
-            <Typography className="text-gray-600 font-semibold text-sm truncate max-w-[200px] md:max-w-[250px] lg:max-w-[300px]">
-              {t('Correo')}: <span className="font-medium text-gray-500 break-words">{dev.usuario_email}</span>
-            </Typography>
-            <Typography className="text-gray-600 font-semibold text-sm">
-              {t('Producto')}: <span className="font-medium text-gray-500">{dev.nombre_producto}</span>
-            </Typography>
-            <Typography className="text-gray-600 font-semibold text-sm">
-              {t('Motivo')}: <span className="italic font-medium text-gray-500">{dev.motivo}</span>
-            </Typography>
-            <Typography className="text-gray-600 font-semibold text-sm">
-              {t('Sección')}: <span className="font-medium text-gray-500">{dev.seccion_producto}</span>
-            </Typography>
-            <Typography className="text-gray-600 font-semibold text-sm">
-              {t('Talla')}: <span className="font-medium text-gray-500">{dev.talla_producto}</span>
-            </Typography>
-            <Typography className="font-semibold text-sm">
-              {t('Estado')}:{" "}
-              <span
-                className={`${
-                  dev.estado === "Devuelto"
-                    ? "text-green-500"
-                    : dev.estado === "Denegado"
-                    ? "text-red-500"
-                    : "text-blue-500"
-                }`}
-              >
-                {t(dev.estado)}
-              </span>
-            </Typography>
-          </div>
+<div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+  <Typography
+    className="text-gray-600 font-semibold text-sm"
+  >
+    {t('Solicitado por')}: <span className="font-medium text-gray-500">{dev.usuario_nombre}</span>
+  </Typography>
+  <Typography
+  className={`text-gray-600 font-semibold text-sm whitespace-nowrap overflow-hidden text-ellipsis 
+  ${dev.estado === "Pendiente" 
+    ? "md:max-w-[300px] lg:max-w-[350px] md:ml-[74px] lg:ml-[74px]" 
+    : "max-w-[200px] md:max-w-[250px] lg:max-w-[300px]"
+  }`}
+>
+  {t('Correo')}: <span className="font-medium text-gray-500">{dev.usuario_email}</span>
+</Typography>
+
+  <Typography
+    className={`text-gray-600 font-semibold text-sm ${
+      dev.estado === "Pendiente" ? "md:ml-[146px] lg:ml-[146px]" : ""
+    }`}
+  >
+    {t('Producto')}: <span className="font-medium text-gray-500">{dev.nombre_producto}</span>
+  </Typography>
+  <Typography
+    className="text-gray-600 font-semibold text-sm"
+  >
+    {t('Motivo')}: <span className="italic font-medium text-gray-500">{dev.motivo}</span>
+  </Typography>
+  <Typography
+    className={`text-gray-600 font-semibold text-sm ${
+      dev.estado === "Pendiente" ? "md:ml-[74px] lg:ml-[74px] xl:[0px]" : ""
+    }`}
+  >
+    {t('Sección')}: <span className="font-medium text-gray-500">{dev.seccion_producto}</span>
+  </Typography>
+  <Typography
+    className={`text-gray-600 font-semibold text-sm ${
+      dev.estado === "Pendiente" ? "md:ml-[146px] lg:ml-[146px] xl:[0px]" : ""
+    }`}
+  >
+    {t('Talla')}: <span className="font-medium text-gray-500">{dev.talla_producto}</span>
+  </Typography>
+  <Typography className="font-semibold text-sm">
+    {t('Estado')}:{" "}
+    <span
+      className={`${
+        dev.estado === "Devuelto"
+          ? "text-green-500"
+          : dev.estado === "Denegado"
+          ? "text-red-500"
+          : "text-blue-500"
+      }`}
+    >
+      {t(dev.estado)}
+    </span>
+  </Typography>
+</div>
+
+
 
           {/* Botones */}
           {dev.estado === "Pendiente" && (
-            <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
+            <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto md:mt-[160px] lg:mt-[114px] xl:mt-0">
               <Button
                 color="green"
                 className="text-[13px] px-4 py-2 rounded-md text-white bg-green-500 hover:bg-green-600 transition"
