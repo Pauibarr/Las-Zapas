@@ -40,7 +40,7 @@ export const Usuarios = () => {
         <div className="min-h-screen bg-gradient-to-bl from-gray-200 dark:from-gray-800">
         <div className="container mx-auto py-20 pb-16">
             <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4 mt-14">
-                {t('Gestión de Usuarios')}
+                {t('GestiÃ³n de Usuarios')}
             </h1>
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="w-full table-auto text-left text-sm text-gray-500 dark:text-gray-300">
@@ -65,7 +65,7 @@ export const Usuarios = () => {
                                             value={newName || user.name_user}
                                             onChange={(e) => handleNameChange(e, user.id)}
                                             onKeyDown={(e) => handleKeyDown(e, user.id)}
-                                            className="px-2 py-1 border border-gray-300 rounded-md"
+                                            className="px-2 py-1 border border-gray-300 rounded-md dark:text-gray-800"
                                         />
                                     ) : (
                                         user.name_user

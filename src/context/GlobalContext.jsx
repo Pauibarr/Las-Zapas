@@ -17,8 +17,8 @@ export const GlobalProvider = ({ children }) => {
     const [compras, setCompras] = useState([]);
     const [zapass, setZapass] = useState([]);
     const [activePopup, setActivePopup] = useState(null); // Manejo de popups
-    const [session, setSession] = useState(null); // Sesión actual del usuario
-    const [usuarios, setUsuarios] = useState([]); // Definición del estado usuarios
+    const [session, setSession] = useState(null); // Sesi贸n actual del usuario
+    const [usuarios, setUsuarios] = useState([]); // Definici贸n del estado usuarios
     const [userData, setUserData] = useState(null); // Datos del usuario
     const [isAdmin, setIsAdmin] = useState(false); // Indica si el usuario es administrador
     const [selectedItem, setSelectedItem] = useState(null);
@@ -46,7 +46,7 @@ export const GlobalProvider = ({ children }) => {
                     await fetchCompras(data.session.user.id);  // 👉 Llamar función aquí
                 } else {
                     setIsAdmin(false); // Por defecto, no es admin si no hay sesión
-                    setCompras([]);  // Limpiar compras si no hay sesión
+                    setCompras([]);  // Limpiar compras si no hay sesi贸n
 
                 }
             };
@@ -60,7 +60,7 @@ export const GlobalProvider = ({ children }) => {
                     fetchUserData(session.user.id);
                     fetchCompras(session.user.id);  // 👉 Actualizar compras al cambiar usuario
                 } else {
-                    setIsAdmin(false); // Por defecto, no es admin si no hay sesión
+                    setIsAdmin(false); // Por defecto, no es admin si no hay sesi贸n
                     setCompras([]);
                 }
             });
@@ -73,9 +73,9 @@ export const GlobalProvider = ({ children }) => {
         try {
             const { data, error } = await supabase
                 .from("Usuarios") // Nombre de tu tabla
-                .select("role") // Selecciona únicamente el campo `role`
+                .select("role") // Selecciona 煤nicamente el campo `role`
                 .eq("uid", uid) // Filtra por el ID del usuario
-                .single(); // Obtén un único resultado
+                .single(); // Obt茅n un 煤nico resultado
     
             if (error) throw error;
     
@@ -87,7 +87,7 @@ export const GlobalProvider = ({ children }) => {
     };
     
     //Vista Usuarios
-     // Función para obtener los usuarios desde Supabase
+     // Funci贸n para obtener los usuarios desde Supabase
      const fetchUsuarios = async () => {
         try {
             // Obtiene todos los usuarios de la tabla "Usuarios"
@@ -101,7 +101,7 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    // Función para actualizar un usuario (cambiar nombre o rol)
+    // Funci贸n para actualizar un usuario (cambiar nombre o rol)
     const updateUser = async (id, updates) => {
         try {
             const { data, error } = await supabase.from("Usuarios").update(updates).eq("id", id).select();
@@ -118,7 +118,7 @@ export const GlobalProvider = ({ children }) => {
         }
     };
 
-    // Función para eliminar un usuario
+    // Funci贸n para eliminar un usuario
     const deleteUser = async (id) => {
         try {
             // Haz la solicitud al endpoint del backend
@@ -135,7 +135,7 @@ export const GlobalProvider = ({ children }) => {
                 throw new Error(error.error || 'Error al eliminar el usuario');
             }
     
-            // Si se elimina con éxito, actualiza el estado local
+            // Si se elimina con 茅xito, actualiza el estado local
             setUsuarios((prev) => prev.filter((user) => user.id !== id));
         } catch (error) {
             console.error('Error deleting user:', error.message);
@@ -212,7 +212,7 @@ export const GlobalProvider = ({ children }) => {
             const productosComprados = await Promise.all(
                 compras.map(async (compra) => {
                     const { data: producto, error: errorProducto } = await supabase
-                        .from(compra.tabla_producto) // Consultamos en la tabla específica
+                        .from(compra.tabla_producto) // Consultamos en la tabla espec铆fica
                         .select("nombre, imagen, precio")
                         .eq("id", compra.puid)
                         .single();
@@ -239,14 +239,14 @@ export const GlobalProvider = ({ children }) => {
 
     const handleOpenImage = (item) => {
         setSelectedItem(item); // Establece el elemento seleccionado para el popup.
-        openPopup("zapatoBotaDetail"); // Abre el popup específico de la imagen.
+        openPopup("zapatoBotaDetail"); // Abre el popup espec铆fico de la imagen.
     };
     
 
     const handleOpenEdit = (tableName, item) => {
-        setEditData(item); // Guarda los datos actuales en edición.
+        setEditData(item); // Guarda los datos actuales en edici贸n.
         setNewZapatoBota(item); // Actualiza el formulario con los datos del zapato.
-        openPopup("editZapatoBota"); // Abre el popup de edición.
+        openPopup("editZapatoBota"); // Abre el popup de edici贸n.
     };    
     
 
@@ -268,11 +268,11 @@ export const GlobalProvider = ({ children }) => {
     const handleSubmit = async (tableName, newItem) => {
         try {
             const { created_at, ...dataToSubmit } = newItem; // Excluye created_at
-            const itemToSubmit = editData ? newItem : dataToSubmit; // Solo envía `created_at` si es necesario
+            const itemToSubmit = editData ? newItem : dataToSubmit; // Solo env铆a `created_at` si es necesario
     
             let data;
             if (editData) {
-                // Modo edición
+                // Modo edici贸n
                 const { data: updatedData, error } = await supabase
                     .from(tableName)
                     .update(itemToSubmit)
@@ -284,13 +284,13 @@ export const GlobalProvider = ({ children }) => {
                 // Actualizar el estado zapass
                 setZapass(prev => prev.map(item => item.id === data.id ? data : item));
     
-                // También actualiza tableData para reflejar los cambios en caché
+                // Tambi茅n actualiza tableData para reflejar los cambios en cach茅
                 setTableData((prev) => ({
                     ...prev,
                     [tableName]: prev[tableName]?.map((item) => item.id === data.id ? data : item)
                 }));
             } else {
-                // Modo creación
+                // Modo creaci贸n
                 const { data: insertedData, error } = await supabase
                     .from(tableName)
                     .insert([itemToSubmit])
@@ -301,7 +301,7 @@ export const GlobalProvider = ({ children }) => {
                 // Agregar el nuevo elemento al estado zapass
                 setZapass(prev => [...prev, data]);
     
-                // También actualiza tableData para reflejar los cambios en caché
+                // Tambi茅n actualiza tableData para reflejar los cambios en cach茅
                 setTableData((prev) => ({
                     ...prev,
                     [tableName]: [...(prev[tableName] || []), data]
