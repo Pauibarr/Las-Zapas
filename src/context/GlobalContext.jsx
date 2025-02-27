@@ -352,14 +352,30 @@ export const GlobalProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            await supabase.auth.signOut();
+            const { error } = await supabase.auth.signOut();
+    
+            if (error) {
+                throw error;
+            }
+    
+            // Limpiar el estado de la sesión
             setSession(null);
             setUserData(null);
+            setIsAdmin(false);
+            setCompras([]);
+    
+            // Forzar la actualización de la sesión en Supabase
+            const { data } = await supabase.auth.getSession();
+            console.log("Sesión después del logout:", data.session); // Debería ser null
+    
+            // Redirigir a la página de inicio
+            navigate("/");
         } catch (error) {
-            console.error("Error logging out:", error.message);
+            console.error("Error cerrando sesión:", error.message);
             setError(error.message);
         }
     };
+    
 
     return (
         <GlobalContext.Provider value={{
