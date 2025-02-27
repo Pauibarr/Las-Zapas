@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../bd/supabase";
+import { useNavigate } from "react-router-dom";
 
 const GlobalContext = createContext();
 
@@ -25,7 +26,7 @@ export const GlobalProvider = ({ children }) => {
     const [editData,setEditData] = useState(null);
     const [error, setError] = useState(null); // Manejo de errores
     const [tableData, setTableData] = useState({}); // Datos de las tablas (cache)
-
+let navigate = useNavigate();
     const openPopup = (popupName) => setActivePopup(popupName); // Cambiar popup activo
 
     const [newZapatoBota, setNewZapatoBota] = useState({
@@ -352,29 +353,43 @@ export const GlobalProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const { error } = await supabase.auth.signOut();
+            // Obtener la sesión actual antes de intentar cerrarla
+            const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     
-            if (error) {
-                throw error;
+            if (sessionError) {
+                console.error("Error obteniendo sesión:", sessionError.message);
+                throw sessionError;
             }
     
-            // Limpiar el estado de la sesión
+            if (!sessionData.session) {
+                console.warn("No hay sesión activa para cerrar.");
+                return;
+            }
+    
+            // Intentar cerrar sesión
+            const { error } = await supabase.auth.signOut();
+            if (error) throw error;
+    
+            // Limpiar datos locales
             setSession(null);
             setUserData(null);
             setIsAdmin(false);
             setCompras([]);
     
-            // Forzar la actualización de la sesión en Supabase
-            const { data } = await supabase.auth.getSession();
-            console.log("Sesión después del logout:", data.session); // Debería ser null
+            // Forzar limpieza del almacenamiento local
+            localStorage.removeItem("sb-access-token");
+            localStorage.removeItem("sb-refresh-token");
     
-            // Redirigir a la página de inicio
+            console.log("Sesión cerrada exitosamente.");
+    
+            // Redirigir al usuario
             navigate("/");
         } catch (error) {
             console.error("Error cerrando sesión:", error.message);
             setError(error.message);
         }
     };
+    
     
 
     return (
