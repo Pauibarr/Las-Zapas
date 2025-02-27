@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Login } from "./Login";
@@ -16,9 +16,27 @@ export const Header = () => {
   let navigate = useNavigate();
   const location = useLocation(); // Hook para obtener la ruta actual
 
+  // Estado para el modo oscuro
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+
+  // Aplicar el modo oscuro al cargar la página
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
+
+  // Función para cambiar el modo
   function changeDarkMode() {
-    document.documentElement.classList.toggle("dark");
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
   }
+
   async function handleLogout() {
     openPopup(null)
     await logout(); // Cierra sesión en Supabase
