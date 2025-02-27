@@ -349,19 +349,22 @@ export const GlobalProvider = ({ children }) => {
             [name]: value,
         }));
     };
+    
 
-    const logout = async () => {
-        try {
-            await supabase.auth.signOut(); // 🔹 Esto ya maneja la eliminación de la sesión
-            setSession(null);
-            setUserData(null);
-    
-        } catch (error) {
-            console.error("Error cerrando sesión:", error.message);
-            setError(error.message);
-        }
-    };
-    
+const logout = async () => {
+    try {
+        await supabase.auth.signOut();
+        setSession(null);
+        setUserData(null);
+    } catch (error) {
+        // 🚀 En vez de mostrar en consola, simplemente ignóralo o muestra un mensaje personalizado
+        console.log("Error controlado al cerrar sesión.");
+        setError("Hubo un problema al cerrar sesión.");
+    }
+};
+
+
+
     return (
         <GlobalContext.Provider value={{
             zapatosHombre,
