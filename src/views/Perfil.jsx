@@ -60,7 +60,7 @@ const handleUpdateProfile = async () => {
       throw new Error(result.error || "Error al actualizar perfil");
     }
 
-    // 🔹 Actualizar sesión con el nuevo correo y nombre
+    // Actualizar sesión con el nuevo correo y nombre
     setSession((prevSession) => ({
       ...prevSession,
       user: {
@@ -70,16 +70,12 @@ const handleUpdateProfile = async () => {
       },
     }));
 
-    // 🔹 Volver a obtener los datos desde la base de datos
-    await fetchUserData(session.user.id);
-
     showAlert(t("Perfil actualizado"), "green");
   } catch (error) {
     console.error("Error al actualizar el perfil:", error);
     showAlert(t("Error al actualizar el perfil"), "red");
   }
 };
-
 
 
 
