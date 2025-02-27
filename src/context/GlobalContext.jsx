@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../bd/supabase";
-import { useNavigate } from "react-router-dom";
 
 const GlobalContext = createContext();
 
@@ -26,7 +25,7 @@ export const GlobalProvider = ({ children }) => {
     const [editData,setEditData] = useState(null);
     const [error, setError] = useState(null); // Manejo de errores
     const [tableData, setTableData] = useState({}); // Datos de las tablas (cache)
-let navigate = useNavigate();
+
     const openPopup = (popupName) => setActivePopup(popupName); // Cambiar popup activo
 
     const [newZapatoBota, setNewZapatoBota] = useState({
@@ -353,44 +352,14 @@ let navigate = useNavigate();
 
     const logout = async () => {
         try {
-            // Obtener la sesión actual antes de intentar cerrarla
-            const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-    
-            if (sessionError) {
-                console.error("Error obteniendo sesión:", sessionError.message);
-                throw sessionError;
-            }
-    
-            if (!sessionData.session) {
-                console.warn("No hay sesión activa para cerrar.");
-                return;
-            }
-    
-            // Intentar cerrar sesión
-            const { error } = await supabase.auth.signOut();
-            if (error) throw error;
-    
-            // Limpiar datos locales
+            await supabase.auth.signOut();
             setSession(null);
             setUserData(null);
-            setIsAdmin(false);
-            setCompras([]);
-    
-            // Forzar limpieza del almacenamiento local
-            localStorage.removeItem("sb-access-token");
-            localStorage.removeItem("sb-refresh-token");
-    
-            console.log("Sesión cerrada exitosamente.");
-    
-            // Redirigir al usuario
-            navigate("/");
         } catch (error) {
-            console.error("Error cerrando sesión:", error.message);
+            console.error("Error logging out:", error.message);
             setError(error.message);
         }
     };
-    
-    
 
     return (
         <GlobalContext.Provider value={{
