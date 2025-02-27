@@ -404,6 +404,7 @@ export const GlobalProvider = ({ children }) => {
             fetchUserData,
             usuarios,
             fetchUsuarios,
+            loadingUser,
             updateUser,
             deleteUser,
             fetchTableData,
