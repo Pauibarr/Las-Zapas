@@ -12,6 +12,7 @@ export const GlobalProvider = ({ children }) => {
     const [zapatosMujer, setZapatosMujer] = useState([]);
     const [zapatillasMujer, setZapatillasMujer] = useState([]);
     const [botasMujer, setBotasMujer] = useState([]);
+    const [loadingUser, setLoadingUser] = useState(true); // ⏳ Nuevo estado de carga
     ////////////////////////////
 
     const [compras, setCompras] = useState([]);
@@ -71,9 +72,10 @@ export const GlobalProvider = ({ children }) => {
 
     const fetchUserData = async (uid) => {
         try {
+            setLoadingUser(true); // Inicia carga
             const { data, error } = await supabase
                 .from("Usuarios")
-                .select("role, name_user") // 🔹 Ahora también seleccionamos el nombre
+                .select("role, name_user")
                 .eq("uid", uid)
                 .single();
     
@@ -81,7 +83,6 @@ export const GlobalProvider = ({ children }) => {
     
             setIsAdmin(data.role === "admin");
     
-            // Actualiza el nombre en la sesión global
             setSession((prevSession) => ({
                 ...prevSession,
                 user: {
@@ -92,6 +93,8 @@ export const GlobalProvider = ({ children }) => {
         } catch (error) {
             console.error("Error fetching user data:", error.message);
             setIsAdmin(false);
+        } finally {
+            setLoadingUser(false); // Finaliza carga
         }
     };
     
