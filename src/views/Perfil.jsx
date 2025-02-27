@@ -61,15 +61,12 @@ const handleUpdateProfile = async () => {
       throw new Error(result.error || "Error al actualizar perfil");
     }
 
-    // Actualizar sesión con el nuevo correo y nombre
-    setSession((prevSession) => ({
-      ...prevSession,
-      user: {
-        ...prevSession.user,
-        email,
-        user_metadata: { ...prevSession.user.user_metadata, name: nombre },
-      },
-    }));
+    // 🚀 **Forzar actualización de sesión en Supabase**
+    const { data, error } = await supabase.auth.refreshSession();
+    if (error) throw error;
+
+    // Actualizar el estado de la sesión con los nuevos datos
+    setSession(data.session);
 
     showAlert(t("Perfil actualizado"), "green");
   } catch (error) {
@@ -77,6 +74,7 @@ const handleUpdateProfile = async () => {
     showAlert(t("Error al actualizar el perfil"), "red");
   }
 };
+
 
 
 
