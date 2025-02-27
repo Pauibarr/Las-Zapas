@@ -8,7 +8,7 @@ export function Perfil() {
 
   const { t } = useTranslation();
 
-  const { compras, session, setSession, fetchCompras } = useGlobalContext();
+  const { compras, session, setSession, fetchCompras, fetchUserData } = useGlobalContext();
   const [selectedCompra, setSelectedCompra] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [motivo, setMotivo] = useState("");
