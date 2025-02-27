@@ -349,14 +349,17 @@ export const GlobalProvider = ({ children }) => {
             [name]: value,
         }));
     };
-
     const logout = async () => {
         try {
             await supabase.auth.signOut();
             setSession(null);
             setUserData(null);
+    
+            // 🔄 Forzar actualización de sesión después del logout
+            await supabase.auth.refreshSession();
+    
         } catch (error) {
-            console.error("Error logging out:", error.message);
+            console.error("Error cerrando sesión:", error.message);
             setError(error.message);
         }
     };
