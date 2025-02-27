@@ -72,29 +72,19 @@ export const GlobalProvider = ({ children }) => {
     const fetchUserData = async (uid) => {
         try {
             const { data, error } = await supabase
-                .from("Usuarios")
-                .select("role, name_user") // 🔹 Ahora también seleccionamos el nombre
-                .eq("uid", uid)
-                .single();
+                .from("Usuarios") // Nombre de tu tabla
+                .select("role") // Selecciona 煤nicamente el campo `role`
+                .eq("uid", uid) // Filtra por el ID del usuario
+                .single(); // Obt茅n un 煤nico resultado
     
             if (error) throw error;
     
-            setIsAdmin(data.role === "admin");
-    
-            // Actualiza el nombre en la sesión global
-            setSession((prevSession) => ({
-                ...prevSession,
-                user: {
-                    ...prevSession.user,
-                    user_metadata: { ...prevSession.user.user_metadata, name: data.name_user },
-                },
-            }));
+            setIsAdmin(data.role === "admin"); // Actualiza `isAdmin` basado en el rol
         } catch (error) {
             console.error("Error fetching user data:", error.message);
-            setIsAdmin(false);
+            setIsAdmin(false); // Por seguridad, asume que no es admin si hay un error
         }
     };
-    
     
     //Vista Usuarios
      // Funci贸n para obtener los usuarios desde Supabase
