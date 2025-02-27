@@ -19,22 +19,34 @@ export const Header = () => {
   function changeDarkMode() {
     document.documentElement.classList.toggle("dark");
   }
-
   async function handleLogout() {
-    // Cierra cualquier popup activo
-    openPopup(null);
+    openPopup(null)
+    await logout(); // Cierra sesión en Supabase
 
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error("Error during logout:", error);
-    } else {
-      await logout(); // Llama a la función de logout del contexto
-      openPopup(null); // Cierra cualquier popup activo
-      setSession(null); // Limpia la sesión
-      setIsAdmin(false); // Asegúrate de que el usuario no es administrador
-      navigate("/"); // Redirige a la página principal
-    }
+    // Limpia manualmente el almacenamiento local
+    localStorage.removeItem("supabase.auth.token");
+    sessionStorage.removeItem("supabase.auth.token");
+
+    setSession(null); // Limpia la sesión
+    setIsAdmin(false); // Asegura que no es admin
+    navigate("/"); // Redirige al home
   }
+
+  // async function handleLogout() {
+  //   // Cierra cualquier popup activo
+  //   openPopup(null);
+
+  //   const { error } = await supabase.auth.signOut();
+  //   if (error) {
+  //     console.error("Error during logout:", error);
+  //   } else {
+  //     await logout(); // Llama a la función de logout del contexto
+  //     openPopup(null); // Cierra cualquier popup activo
+  //     setSession(null); // Limpia la sesión
+  //     setIsAdmin(false); // Asegúrate de que el usuario no es administrador
+  //     navigate("/"); // Redirige a la página principal
+  //   }
+  // }
   
   function handleLoginClick() {
     setIsMenuOpen(false); // Cierra el menú móvil al abrir el popup

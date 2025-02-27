@@ -43,9 +43,9 @@ export const GlobalProvider = ({ children }) => {
         
                 if (data.session?.user) {
                     await fetchUserData(data.session.user.id);
-                    await fetchCompras(data.session.user.id);  // 👉 Llamar función aquí
+                    await fetchCompras(data.session.user.id);  // 馃憠 Llamar funci贸n aqu铆
                 } else {
-                    setIsAdmin(false); // Por defecto, no es admin si no hay sesión
+                    setIsAdmin(false); // Por defecto, no es admin si no hay sesi贸n
                     setCompras([]);  // Limpiar compras si no hay sesi贸n
 
                 }
@@ -58,7 +58,7 @@ export const GlobalProvider = ({ children }) => {
         
                 if (session?.user) {
                     fetchUserData(session.user.id);
-                    fetchCompras(session.user.id);  // 👉 Actualizar compras al cambiar usuario
+                    fetchCompras(session.user.id);  // 馃憠 Actualizar compras al cambiar usuario
                 } else {
                     setIsAdmin(false); // Por defecto, no es admin si no hay sesi贸n
                     setCompras([]);
