@@ -349,21 +349,19 @@ export const GlobalProvider = ({ children }) => {
             [name]: value,
         }));
     };
+
     const logout = async () => {
         try {
-            await supabase.auth.signOut();
+            await supabase.auth.signOut(); // 🔹 Esto ya maneja la eliminación de la sesión
             setSession(null);
             setUserData(null);
-    
-            // 🔄 Forzar actualización de sesión después del logout
-            await supabase.auth.refreshSession();
     
         } catch (error) {
             console.error("Error cerrando sesión:", error.message);
             setError(error.message);
         }
     };
-
+    
     return (
         <GlobalContext.Provider value={{
             zapatosHombre,
