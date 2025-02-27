@@ -54,23 +54,20 @@ export const GlobalProvider = ({ children }) => {
             fetchSession();
         
             const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-                const handleAuthChange = async () => {
-                    setSession(session);
+                setSession(session);
         
-                    if (session?.user) {
-                        await fetchUserData(session.user.id);
-                        await fetchCompras(session.user.id);
-                    } else {
-                        setIsAdmin(false);
-                        setCompras([]);
-                    }
-                };
-        
-                handleAuthChange();
+                if (session?.user) {
+                    fetchUserData(session.user.id);
+                    fetchCompras(session.user.id);  // 馃憠 Actualizar compras al cambiar usuario
+                } else {
+                    setIsAdmin(false); // Por defecto, no es admin si no hay sesi贸n
+                    setCompras([]);
+                }
             });
         
             return () => subscription?.unsubscribe?.();
-        }, []);
+        
+    }, []);
 
     const fetchUserData = async (uid) => {
         try {
