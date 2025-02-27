@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Login } from "./Login";
@@ -12,6 +12,7 @@ export const Header = () => {
   const { t } = useTranslation();
 
   const { isButtonDisabled, handleButtonClick, session, setSession, isAdmin, setIsAdmin, openPopup, logout } = useGlobalContext();
+  const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para abrir/cerrar el menú móvil
   let navigate = useNavigate();
   const location = useLocation(); // Hook para obtener la ruta actual
@@ -52,6 +53,17 @@ export const Header = () => {
       openPopup("login");
     });
   }
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (session?.user) {
+        // Simula una posible carga asíncrona de datos adicionales
+        await new Promise(resolve => setTimeout(resolve, 500)); 
+        setUser(session.user.user_metadata);
+      }
+    };
+
+    fetchUser();
+  }, [session]);
 
   // Sirve para hacer un .map para las rutas. NO ENRUTA y se encesita si o si el enrutamiento del Router en App.jsx
   const menuRoutes = [
@@ -66,9 +78,11 @@ export const Header = () => {
         <h1 className="sm:text-2xl lg:text-3xl xl:text-3xl font-bold">
           <Link to="/">Las Zapas</Link>
         </h1>
-        {session && session.user && session.user.user_metadata && (
-          <p className="hidden md:block hover:text-gray-400  md:mr-[50px] md:ml-[30px] lg:ml[70px] xl:ml-[70px] flex-1 font-semibold md:text-[15px] lg:text-[16px] xl:text-[16px]">{t('Bienvenido')} {session.user.user_metadata.name}</p>
-        )}
+        {user && (
+        <p className="hidden md:block hover:text-gray-400  md:mr-[50px] md:ml-[30px] lg:ml-[70px] xl:ml-[70px] flex-1 font-semibold md:text-[15px] lg:text-[16px] xl:text-[16px]">
+          {t('Bienvenido')} {user.name}
+        </p>
+      )}
 
         {/* Menú para pantallas grandes */}
         <nav className="hidden md:block">
