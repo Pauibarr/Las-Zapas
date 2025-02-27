@@ -360,7 +360,8 @@ export const GlobalProvider = ({ children }) => {
             await supabase.auth.refreshSession();
     
         } catch (error) {
-            console.log()
+            console.error("Error cerrando sesión:", error.message);
+            setError(error.message);
         }
     }; 
 
