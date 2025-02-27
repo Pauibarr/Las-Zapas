@@ -351,17 +351,20 @@ export const GlobalProvider = ({ children }) => {
     };
     
 
-const logout = async () => {
-    try {
-        await supabase.auth.signOut();
-        setSession(null);
-        setUserData(null);
-    } catch (error) {
-        // 🚀 En vez de mostrar en consola, simplemente ignóralo o muestra un mensaje personalizado
-        console.log("Error controlado al cerrar sesión.");
-        setError("Hubo un problema al cerrar sesión.");
-    }
-};
+    const logout = async () => {
+        try {
+            await supabase.auth.signOut();
+            setSession(null);
+            setUserData(null);
+    
+            // 🔄 Forzar actualización de sesión después del logout
+            await supabase.auth.refreshSession().catch(() => {}); // Ignorar error de consola
+        } catch (error) {
+            console.error("Error cerrando sesión:", error.message);
+            setError(error.message);
+        }
+    };
+    
 
 
 
