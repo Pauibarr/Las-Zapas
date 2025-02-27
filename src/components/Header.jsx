@@ -23,9 +23,7 @@ export const Header = () => {
     openPopup(null)
     await logout(); // Cierra sesión en Supabase
 
-    // Limpia manualmente el almacenamiento local
-    localStorage.removeItem("supabase.auth.token");
-    sessionStorage.removeItem("supabase.auth.token");
+
 
     setSession(null); // Limpia la sesión
     setIsAdmin(false); // Asegura que no es admin
