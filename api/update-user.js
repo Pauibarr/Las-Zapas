@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const { userId, nombre, email, password } = req.body;
 
-  if (!userId  !nombre.trim()  !email.trim()) {
+  if (!userId || !nombre.trim() || !email.trim()) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
 
