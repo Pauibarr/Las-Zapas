@@ -32,7 +32,6 @@ useEffect(() => {
     if (session?.user?.id) {
         fetchCompras(session.user.id);
     }
-    console.log(session)
 }, [session]);  // Se ejecuta cuando la sesión cambia
 
 const handleUpdateProfile = async () => {
@@ -61,11 +60,15 @@ const handleUpdateProfile = async () => {
       throw new Error(result.error || "Error al actualizar perfil");
     }
 
-    // ✅ Actualizar sesión con Supabase en lugar de modificar el estado manualmente
-    await supabase.auth.updateUser({
-      email,
-      data: { name: nombre },
-    });
+    // Actualizar sesión con el nuevo correo y nombre
+    setSession((prevSession) => ({
+      ...prevSession,
+      user: {
+        ...prevSession.user,
+        email,
+        user_metadata: { ...prevSession.user.user_metadata, name: nombre },
+      },
+    }));
 
     showAlert(t("Perfil actualizado"), "green");
   } catch (error) {
@@ -73,7 +76,6 @@ const handleUpdateProfile = async () => {
     showAlert(t("Error al actualizar el perfil"), "red");
   }
 };
-
 
 
 
