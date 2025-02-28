@@ -1,9 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "../bd/supabase";
+import { useTranslation } from "react-i18next";
 
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
+
+    const {t} = useTranslation();
 
     // Esto es para las imagenes desde la base de datos para hombre y mujer
     const [zapatosHombre, setZapatosHombre] = useState([]);
@@ -24,6 +27,7 @@ export const GlobalProvider = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(false); // Indica si el usuario es administrador
     const [selectedItem, setSelectedItem] = useState(null);
     const [editData,setEditData] = useState(null);
+    const [errorSubmit, setErrorSubmit] = useState("");
     const [error, setError] = useState(null); // Manejo de errores
     const [tableData, setTableData] = useState({}); // Datos de las tablas (cache)
 
@@ -274,6 +278,7 @@ export const GlobalProvider = ({ children }) => {
     }
 
     const handleOpenPut = () => {
+        setErrorSubmit(""); // Limpia el mensaje de error al abrir el popup
         putZapatoBota();
         openPopup("newZapatoBota");
     }
@@ -281,50 +286,60 @@ export const GlobalProvider = ({ children }) => {
     const handleSubmit = async (tableName, newItem) => {
         try {
             const { created_at, ...dataToSubmit } = newItem; // Excluye created_at
-            const itemToSubmit = editData ? newItem : dataToSubmit; // Solo env铆a `created_at` si es necesario
+    
+            // Verificar si ya existe un zapato con el mismo nombre
+            const { data: existingData, error: fetchError } = await supabase
+                .from(tableName)
+                .select("id")
+                .eq("nombre", newItem.nombre);
+    
+            if (fetchError) throw fetchError;
+    
+            // Si ya existe y estamos en modo creación, muestra el error y detiene la ejecución
+            if (existingData.length > 0 && !editData) {
+                setErrorSubmit(t('Ya existe este nombre'));
+                return; // Detiene la ejecución si ya existe un zapato con el mismo nombre
+            }
     
             let data;
             if (editData) {
-                // Modo edici贸n
+                // Modo edición
                 const { data: updatedData, error } = await supabase
                     .from(tableName)
-                    .update(itemToSubmit)
+                    .update(dataToSubmit)
                     .eq("id", editData.id)
                     .select();
+    
                 if (error) throw error;
                 data = updatedData[0];
     
-                // Actualizar el estado zapass
+                // Actualizar estados localmente
                 setZapass(prev => prev.map(item => item.id === data.id ? data : item));
-    
-                // Tambi茅n actualiza tableData para reflejar los cambios en cach茅
-                setTableData((prev) => ({
+                setTableData(prev => ({
                     ...prev,
-                    [tableName]: prev[tableName]?.map((item) => item.id === data.id ? data : item)
+                    [tableName]: prev[tableName]?.map(item => item.id === data.id ? data : item),
                 }));
             } else {
-                // Modo creaci贸n
+                // Modo creación
                 const { data: insertedData, error } = await supabase
                     .from(tableName)
-                    .insert([itemToSubmit])
+                    .insert([dataToSubmit])
                     .select();
+    
                 if (error) throw error;
                 data = insertedData[0];
     
-                // Agregar el nuevo elemento al estado zapass
+                // Agregar nuevo elemento al estado
                 setZapass(prev => [...prev, data]);
-    
-                // Tambi茅n actualiza tableData para reflejar los cambios en cach茅
-                setTableData((prev) => ({
+                setTableData(prev => ({
                     ...prev,
-                    [tableName]: [...(prev[tableName] || []), data]
+                    [tableName]: [...(prev[tableName] || []), data],
                 }));
             }
     
-            // Limpia el formulario y cierra el popup
+            // Limpiar formulario y cerrar popup
             setNewZapatoBota({
                 nombre: "",
-                created_at: "",
                 descripcion: "",
                 imagen: "",
                 precio: "",
@@ -332,10 +347,13 @@ export const GlobalProvider = ({ children }) => {
             setEditData(null);
             openPopup(null);
         } catch (error) {
-            console.error(`Error handling item in ${tableName}:`, error.message);
+            console.error(`Error en ${tableName}:`, error.message);
             setError(error.message);
         }
     };
+    
+    
+    
     
     
     
@@ -357,11 +375,17 @@ export const GlobalProvider = ({ children }) => {
 
     const handleChange = (editZapatoBota) => {
         const { name, value } = editZapatoBota.target;
+    
         setNewZapatoBota((prev) => ({
             ...prev,
             [name]: value,
         }));
+    
+        if (name === "nombre") {
+            setErrorSubmit(null); // Borra el error si el usuario cambia el nombre
+        }
     };
+    
     
     const logout = async () => {
         try {
@@ -394,6 +418,8 @@ export const GlobalProvider = ({ children }) => {
             setBotasMujer,
             compras,
             fetchCompras,
+            errorSubmit,
+            setErrorSubmit,
             zapass,
             setZapass,
             activePopup,
