@@ -76,6 +76,7 @@ const handleUpdateProfile = async () => {
       user: {
         ...prevSession.user,
         email,
+        nombre,
         user_metadata: { ...prevSession.user.user_metadata, name: nombre },
       },
     }));
@@ -134,11 +135,11 @@ const handleUpdateProfile = async () => {
     try {
       const { error } = await supabase.from("Devoluciones").insert([{ user_id: session.user.id, compra_id: selectedCompra.id, motivo, estado: "Pendiente" }]);
       if (error) throw error;
-      showAlert(t("Devoluci贸n enviada"), "green");
+      showAlert(t("Devolución enviada"), "green");
       setShowModal(false);
       setDevoluciones({ ...devoluciones, [selectedCompra.id]: { motivo, estado: "Pendiente" } });
     } catch (error) {
-      showAlert(t("Error al solicitar devoluci贸n"), "red");
+      showAlert(t("Error al solicitar devolución"), "red");
     } finally {
       setLoading(false);
     }
@@ -186,10 +187,10 @@ const handleUpdateProfile = async () => {
       delete updatedDevoluciones[cancelCompraId];
       setDevoluciones(updatedDevoluciones);
   
-      showAlert(t("Devoluci贸n cancelada"), "green");
+      showAlert(t("Devolución cancelada"), "green");
     } catch (error) {
-      console.error("Error al cancelar la devoluci贸n:", error);
-      showAlert(t("Error al cancelar la devoluci贸n"), "red");
+      console.error("Error al cancelar la devolución:", error);
+      showAlert(t("Error al cancelar la devolución"), "red");
     } finally {
       setShowModal(false);
       setCancelCompraId(null);
@@ -219,9 +220,9 @@ const handleUpdateProfile = async () => {
 
         {view === "editar" ? (
           <div className="space-y-4">
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="text" label={t("Nombre")} value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electr贸nico")} value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contrase帽a")} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="text" label={t("Nombre")} placeholder={session?.user?.user_metadata?.name} value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electrónico")} value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contraseña")} type="password" placeholder={session?.user?.user_metadata?.password ? "*".repeat(session.user.user_metadata.password.length) : "*****"} value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button color="green" onClick={handleUpdateProfile}>{t("Guardar cambios")}</Button>
           </div>
         ) : (
@@ -256,11 +257,11 @@ const handleUpdateProfile = async () => {
                       </p>
                       <div className="flex flex-col space-x-0 sm:space-x-2 sm:flex-row mt-2">
                         <Button className="text-[11px] sm:text-[12px]" size="sm" color="blue" onClick={() => handleEditDevolucion(compra)}>{t('Editar el Motivo')}</Button>
-                        <Button className="mt-2 sm:mt-0 text-[11px] sm:text-[12px]" size="sm" color="red" onClick={() => handleCancelDevolucion(compra.id)}>{t('Cancelar Devoluci贸n')}</Button>
+                        <Button className="mt-2 sm:mt-0 text-[11px] sm:text-[12px]" size="sm" color="red" onClick={() => handleCancelDevolucion(compra.id)}>{t('Cancelar Devolución')}</Button>
                       </div>
                     </div>
                   ) : (
-                    <Button className="text-[11px] sm:text-[12px] mt-2" size="sm" color="red" onClick={() => handleOpenModal(compra)}>{t('Devoluci贸n')}</Button>
+                    <Button className="text-[11px] sm:text-[12px] mt-2" size="sm" color="red" onClick={() => handleOpenModal(compra)}>{t('Devolución')}</Button>
                   )}
                 </div>
               </div>
@@ -278,14 +279,14 @@ const handleUpdateProfile = async () => {
               <>
                 <Typography variant="h4" className="text-red-600 text-center">
                   {cancelCompraId 
-                    ? t('驴Seguro que quieres cancelar la devoluci贸n?') 
+                    ? t('驴Seguro que quieres cancelar la devolución?') 
                     : t('驴Seguro que quieres devolver este producto?')
                   }
                 </Typography>
                 <Typography className="mb-3 font-normal text-center text-gray-700 dark:text-gray-300">{selectedCompra?.nombre || ""}</Typography>
                 <div className="flex justify-between w-full mt-4">
                 <Button className="text-[11px]" color="red" onClick={cancelCompraId ? handleConfirmCancelDevolucion : handleConfirmDevolucion}>
-                  {t('S铆, estoy seguro')}
+                  {t('Sí, estoy seguro')}
                 </Button>
                   <Button className="text-[11px]" color="gray" onClick={() => setShowModal(false)}>
                     {cancelCompraId ? t('No quiero cancelar') : t('No quiero devolver')}
@@ -294,7 +295,7 @@ const handleUpdateProfile = async () => {
               </>
             ) : (
               <>
-                <Typography variant="h5" className="text-gray-800 dark:text-gray-200 font-extrabold">{t('Motivo de la devoluci贸n')}</Typography>
+                <Typography variant="h5" className="text-gray-800 dark:text-gray-200 font-extrabold">{t('Motivo de la devolución')}</Typography>
                 <Input color="blue-gray" className="text-gray-900 dark:text-gray-100 w-full" type="text" label={t('Motivo')} value={motivo} onChange={(e) => { setMotivo(e.target.value); setErrorMotivo(""); }} disabled={loading} />
                 {errorMotivo && <Typography className="text-red-600 text-sm mt-2">{errorMotivo}</Typography>}
                 <div className="flex justify-between w-full mt-4">
