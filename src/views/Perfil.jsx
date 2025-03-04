@@ -222,7 +222,7 @@ const handleUpdateProfile = async () => {
           <div className="space-y-4">
             <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="text" label={t("Nombre")} placeholder={session?.user?.user_metadata?.name} value={nombre} onChange={(e) => setNombre(e.target.value)} />
             <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electrónico")} value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contraseña")} type="password" placeholder={session?.user?.user_metadata?.password ? "*".repeat(session.user.user_metadata.password.length) : "*****"} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contraseña")} type="password" placeholder={session?.user?.user_metadata?.password ? "*".repeat(session.user.user_metadata.password.length) : "************************************************"} value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button color="green" onClick={handleUpdateProfile}>{t("Guardar cambios")}</Button>
           </div>
         ) : (
