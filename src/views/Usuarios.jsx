@@ -2,16 +2,76 @@ import { useEffect, useState } from "react";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Button } from "@material-tailwind/react";
 import { useTranslation } from "react-i18next";
+import { supabase } from "../bd/supabase";
+import { useNavigate } from "react-router-dom";
 
 export const Usuarios = () => {
     const { t } = useTranslation()
-    const { usuarios, deleteUser, updateUser, fetchUsuarios } = useGlobalContext();
+    const { setError } = useGlobalContext();
+    const navigate = useNavigate();
+    const [usuarios, setUsuarios] = useState([]); // Definici贸n del estado usuarios
     const [editUserId, setEditUserId] = useState(null);
     const [newName, setNewName] = useState("");
 
-    useEffect(() => {
-        fetchUsuarios();
-    }, [fetchUsuarios]);
+    // Funci贸n para obtener los usuarios desde Supabase
+         const fetchUsuarios = async () => {
+            try {
+                // Obtiene todos los usuarios de la tabla "Usuarios"
+                const { data, error } = await supabase.from("Usuarios").select("*");
+    
+                if (error) throw error;
+                setUsuarios(data);
+            } catch (error) {
+                console.error("Error fetching users:", error.message);
+                setError(error.message);
+            }
+        };
+    
+        useEffect(() => {
+            fetchUsuarios();
+        }, []);
+
+        // Funci贸n para actualizar un usuario (cambiar nombre o rol)
+        const updateUser = async (id, updates) => {
+            try {
+                const { data, error } = await supabase.from("Usuarios").update(updates).eq("id", id).select();
+    
+                if (error) throw error;
+    
+                // Actualiza la lista de usuarios en el estado local
+                setUsuarios((prev) => {
+                    return prev.map((user) => (user.id === id ? data[0] : user));
+                });
+            } catch (error) {
+                console.error("Error updating user:", error.message);
+                setError(error.message);
+            }
+        };
+    
+        // Funci贸n para eliminar un usuario
+        const deleteUser = async (id) => {
+            try {
+                // Haz la solicitud al endpoint del backend
+                const response = await fetch('https://laszapas.vercel.app/api/delete-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id }),
+                });
+        
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Error al eliminar el usuario');
+                }
+        
+                // Si se elimina con 茅xito, actualiza el estado local
+                setUsuarios((prev) => prev.filter((user) => user.id !== id));
+            } catch (error) {
+                console.error('Error deleting user:', error.message);
+                setError(error.message);
+            }
+        };
 
     const handleNameChange = (e, userId) => {
         setNewName(e.target.value);
@@ -40,7 +100,7 @@ export const Usuarios = () => {
         <div className="min-h-screen bg-gradient-to-bl from-gray-200 dark:from-gray-800">
         <div className="container mx-auto py-20 pb-16">
             <h1 className="dark:text-white text-blue-gray-800 text-3xl font-bold mb-4 mt-14">
-                {t('GestiÃ³n de Usuarios')}
+                {t('Gestión de Usuarios')}
             </h1>
             <div className="overflow-x-auto bg-white shadow-md rounded-lg">
                 <table className="w-full table-auto text-left text-sm text-gray-500 dark:text-gray-300">
@@ -68,7 +128,12 @@ export const Usuarios = () => {
                                             className="px-2 py-1 border border-gray-300 rounded-md dark:text-gray-800"
                                         />
                                     ) : (
-                                        user.name_user
+                                        <button
+                                            onClick={() => navigate(`/perfil/${user.uid}`)}
+                                            className="transition duration-150 hover:scale-105"
+                                        >
+                                            {user.name_user}
+                                        </button>
                                     )}
                                 </td>
                                 <td className="px-6 py-4">{user.email}</td>
@@ -76,7 +141,7 @@ export const Usuarios = () => {
                                     <span
                                         className={`inline-block px-2 py-1 rounded-full text-sm font-medium ${
                                             user.role === "admin"
-                                                ? "bg-gray-800 text-gray-200"
+                                                ? "bg-gray-900 text-gray-100"
                                                 : "bg-gray-200 text-gray-800"
                                         }`}
                                     >
@@ -105,9 +170,9 @@ export const Usuarios = () => {
                                                 </Button>
                                                 <Button
                                                     size="sm"
-                                                    color="gray"
+                                                    color="blue-gray"
                                                     onClick={cancelEdit}
-                                                    className="hover:bg-gray-700"
+                                                    className="bg-gray-900 hover:bg-gray-700"
                                                 >
                                                     {t('Cancelar')}
                                                 </Button>
@@ -115,7 +180,7 @@ export const Usuarios = () => {
                                         ) : (
                                             <Button
                                                 size="sm"
-                                                color="blue"
+                                                color="green"
                                                 onClick={() => {
                                                     setEditUserId(user.id);
                                                     setNewName(user.name_user);

@@ -92,9 +92,12 @@ export function Comprar() {
         .insert(selectedTallas.map(talla => ({
           uid: session?.user.id,
           puid: item?.id,
+          nombre: nombre,
+          imagen: item.imagen,
           tabla_producto: tableName,
           seccion: seccionProducto,
           talla: talla,
+          precio: item?.precio,
           created_at: new Date()
         })));
   
@@ -197,8 +200,8 @@ export function Comprar() {
       </Card>
       </div>
 
-      <Dialog size="xs" open={showSuccessPopup} handler={() => setShowSuccessPopup(false)}>
-        <Card className="mx-auto w-full max-w-[24rem]">
+      <Dialog size="xs" open={showSuccessPopup} handler={() => setShowSuccessPopup(false)} className="bg-transparent shadow-none">
+        <Card className="mx-auto w-full max-w-[24rem] bg-gray-100 dark:bg-blue-gray-900 dark:text-white">
           <CardBody className="flex flex-col items-center">
             <Typography variant="h4" color="green">
               {t('Compra realizada con éxito')}

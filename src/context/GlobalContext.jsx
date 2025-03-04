@@ -22,7 +22,6 @@ export const GlobalProvider = ({ children }) => {
     const [zapass, setZapass] = useState([]);
     const [activePopup, setActivePopup] = useState(null); // Manejo de popups
     const [session, setSession] = useState(null); // Sesi贸n actual del usuario
-    const [usuarios, setUsuarios] = useState([]); // Definici贸n del estado usuarios
     const [userData, setUserData] = useState(null); // Datos del usuario
     const [isAdmin, setIsAdmin] = useState(false); // Indica si el usuario es administrador
     const [selectedItem, setSelectedItem] = useState(null);
@@ -81,12 +80,9 @@ export const GlobalProvider = ({ children }) => {
                 .from("Usuarios")
                 .select("role, name_user")
                 .eq("uid", uid)
-                .single();
-    
-            if (error) throw error;
-    
-            setIsAdmin(data.role === "admin");
-    
+                .single()
+            if (error) throw error
+            setIsAdmin(data.role === "admin")
             setSession((prevSession) => ({
                 ...prevSession,
                 user: {
@@ -101,68 +97,30 @@ export const GlobalProvider = ({ children }) => {
             setLoadingUser(false); // Finaliza carga
         }
     };
-    
-    
-    //Vista Usuarios
-     // Funci贸n para obtener los usuarios desde Supabase
-     const fetchUsuarios = async () => {
-        try {
-            // Obtiene todos los usuarios de la tabla "Usuarios"
-            const { data, error } = await supabase.from("Usuarios").select("*");
 
-            if (error) throw error;
-            setUsuarios(data);
-        } catch (error) {
-            console.error("Error fetching users:", error.message);
-            setError(error.message);
-        }
-    };
-
-    // Funci贸n para actualizar un usuario (cambiar nombre o rol)
-    const updateUser = async (id, updates) => {
-        try {
-            const { data, error } = await supabase.from("Usuarios").update(updates).eq("id", id).select();
-
-            if (error) throw error;
-
-            // Actualiza la lista de usuarios en el estado local
-            setUsuarios((prev) => {
-                return prev.map((user) => (user.id === id ? data[0] : user));
-            });
-        } catch (error) {
-            console.error("Error updating user:", error.message);
-            setError(error.message);
-        }
-    };
-
-    // Funci贸n para eliminar un usuario
-    const deleteUser = async (id) => {
-        try {
-            // Haz la solicitud al endpoint del backend
-            const response = await fetch('https://laszapas.vercel.app/api/delete-user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id }),
-            });
+    // const fetchUserData = async (uid) => {
+    //     try {
+    //         setLoadingUser(true); // Inicia carga
+    //         const { data, error } = await supabase
+    //             .from("Usuarios")
+    //             .select("role, name_user")
+    //             .eq("uid", uid)
+    //             .single();
     
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error al eliminar el usuario');
-            }
+    //         if (error) throw error;
     
-            // Si se elimina con 茅xito, actualiza el estado local
-            setUsuarios((prev) => prev.filter((user) => user.id !== id));
-        } catch (error) {
-            console.error('Error deleting user:', error.message);
-            setError(error.message);
-        }
-    };
+    //         setIsAdmin(data.role === "admin");
     
+    //         return (data)
+    //     } catch (error) {
+    //         console.error("Error fetching user data:", error.message);
+    //         setIsAdmin(false);
+    //         return null;
+    //     } finally {
+    //         setLoadingUser(false); // Finaliza carga
+    //     }
+    // };
     
-
-    //Fin: Vista Usuarios
 
     const fetchTableData = async (tableName) => {
         if (tableData[tableName]) {
@@ -220,32 +178,12 @@ export const GlobalProvider = ({ children }) => {
         try {
             const { data: compras, error } = await supabase
                 .from("Compras")
-                .select("id, created_at, puid, tabla_producto, talla")
+                .select("id, created_at, puid, nombre, imagen, precio, tabla_producto, talla, seccion")
                 .eq("uid", userId);
-            
+    
             if (error) throw error;
     
-            // Obtener los detalles de cada producto de su tabla respectiva
-            const productosComprados = await Promise.all(
-                compras.map(async (compra) => {
-                    const { data: producto, error: errorProducto } = await supabase
-                        .from(compra.tabla_producto) // Consultamos en la tabla espec铆fica
-                        .select("nombre, imagen, precio")
-                        .eq("id", compra.puid)
-                        .single();
-                    
-                    if (errorProducto) {
-                        console.error(`Error obteniendo producto ${compra.puid} de ${compra.tabla_producto}:`, errorProducto);
-                        return null;
-                    }
-    
-                    return { ...compra, producto };
-                })
-            );
-    
-            // Filtramos los productos que se encontraron correctamente
-            setCompras(productosComprados.filter(item => item !== null));
-    
+            setCompras(compras);
         } catch (error) {
             console.error("Error obteniendo compras:", error.message);
             setError(error.message);
@@ -417,6 +355,7 @@ export const GlobalProvider = ({ children }) => {
             botasMujer,
             setBotasMujer,
             compras,
+            setCompras,
             fetchCompras,
             errorSubmit,
             setErrorSubmit,
@@ -428,11 +367,7 @@ export const GlobalProvider = ({ children }) => {
             setSession,
             userData,
             fetchUserData,
-            usuarios,
-            fetchUsuarios,
             loadingUser,
-            updateUser,
-            deleteUser,
             fetchTableData,
             isAdmin,
             setIsAdmin,

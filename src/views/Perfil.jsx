@@ -3,12 +3,14 @@ import { useGlobalContext } from "../context/GlobalContext";
 import { Dialog, Button, Typography, Input, Card, CardBody, Alert } from "@material-tailwind/react";
 import { supabase } from "../bd/supabase";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+
 
 export function Perfil() {
 
   const { t } = useTranslation();
 
-  const { compras, session, setSession, fetchCompras, fetchUserData } = useGlobalContext();
+  const { compras, setCompras, session, setSession, fetchCompras, fetchUserData } = useGlobalContext();
   const [selectedCompra, setSelectedCompra] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [motivo, setMotivo] = useState("");
@@ -23,17 +25,24 @@ export function Perfil() {
   const [email, setEmail] = useState(session?.user?.email || "");
   const [nombre, setNombre] = useState("");
   const [password, setPassword] = useState("");
+  const { id } = useParams(); // Obtiene el id desde la URL
+  const userId = id || session?.user?.id; // Usa el id de la URL o el de la sesi贸n si no hay id
 
+ 
 // Guardar en localStorage cuando cambia la vista
 useEffect(() => {
   localStorage.setItem("perfilView", view);
 }, [view]);
 
-  useEffect(() => {
-    if (session?.user?.id) {
-        fetchCompras(session.user.id);
+useEffect(() => {
+  if (!userId) return;
+
+    if (userId !== session?.user?.id) {
+        setCompras([]); // Limpia solo si no es tu perfil
     }
-}, [session]);  // Se ejecuta cuando la sesión cambia
+
+    fetchCompras(userId);
+}, [userId]);
 
 const handleUpdateProfile = async () => {
   if (!email.trim() || !nombre.trim()) {
@@ -52,7 +61,7 @@ const handleUpdateProfile = async () => {
         userId: session.user.id,
         nombre,
         email,
-        password: password || undefined, // Solo lo manda si hay contraseña
+        password: password || undefined, // Solo lo manda si hay contrase帽a
       }),
     });
 
@@ -61,7 +70,7 @@ const handleUpdateProfile = async () => {
       throw new Error(result.error || "Error al actualizar perfil");
     }
 
-    // 🔹 Actualizar sesión con el nuevo correo y nombre
+    // 馃敼 Actualizar sesi贸n con el nuevo correo y nombre
     setSession((prevSession) => ({
       ...prevSession,
       user: {
@@ -71,7 +80,7 @@ const handleUpdateProfile = async () => {
       },
     }));
 
-    // 🔹 Volver a obtener los datos desde la base de datos
+    // 馃敼 Volver a obtener los datos desde la base de datos
     await fetchUserData(session.user.id);
 
     showAlert(t("Perfil actualizado"), "green");
@@ -104,11 +113,11 @@ const handleUpdateProfile = async () => {
 
   const handleConfirmDevolucion = () => {
     if (cancelCompraId) {
-      // Si estamos cancelando una devolución, simplemente cerramos el modal
+      // Si estamos cancelando una devoluci贸n, simplemente cerramos el modal
       setShowModal(false);
       setCancelCompraId(null); // Reseteamos el estado
     } else {
-      // Si estamos haciendo una devolución nueva, pedimos el motivo
+      // Si estamos haciendo una devoluci贸n nueva, pedimos el motivo
       setShowMotivoInput(true);
     }
   };
@@ -125,11 +134,11 @@ const handleUpdateProfile = async () => {
     try {
       const { error } = await supabase.from("Devoluciones").insert([{ user_id: session.user.id, compra_id: selectedCompra.id, motivo, estado: "Pendiente" }]);
       if (error) throw error;
-      showAlert(t("Devolución enviada"), "green");
+      showAlert(t("Devoluci贸n enviada"), "green");
       setShowModal(false);
       setDevoluciones({ ...devoluciones, [selectedCompra.id]: { motivo, estado: "Pendiente" } });
     } catch (error) {
-      showAlert(t("Error al solicitar devolución"), "red");
+      showAlert(t("Error al solicitar devoluci贸n"), "red");
     } finally {
       setLoading(false);
     }
@@ -172,15 +181,15 @@ const handleUpdateProfile = async () => {
   
       if (error) throw error;
   
-      // Eliminar la devolución del estado
+      // Eliminar la devoluci贸n del estado
       const updatedDevoluciones = { ...devoluciones };
       delete updatedDevoluciones[cancelCompraId];
       setDevoluciones(updatedDevoluciones);
   
-      showAlert(t("Devolución cancelada"), "green");
+      showAlert(t("Devoluci贸n cancelada"), "green");
     } catch (error) {
-      console.error("Error al cancelar la devolución:", error);
-      showAlert(t("Error al cancelar la devolución"), "red");
+      console.error("Error al cancelar la devoluci贸n:", error);
+      showAlert(t("Error al cancelar la devoluci贸n"), "red");
     } finally {
       setShowModal(false);
       setCancelCompraId(null);
@@ -194,14 +203,14 @@ const handleUpdateProfile = async () => {
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 border-b pb-4 mb-6">{t('Perfil')}</h1>
         <div className="flex justify-between">
           <button className={`capitalize text-2xl font-medium px-4 py-2 rounded-xl mb-4 
-            ${view === "compras" ? "text-gray-900 dark:text-gray-100 cursor-text select-text" : "transition duration-150 hover:scale-105 bg-gray-900 dark:bg-gray-200 text-gray-100 dark:text-gray-900"}`}
+            ${view === "compras" ? "text-gray-900 dark:text-gray-100 cursor-text select-text" : "transition duration-150 hover:scale-105 bg-gray-900 hover:bg-gray-700 dark:bg-gray-200 dark:hover:bg-gray-400 text-gray-100 dark:text-gray-900"}`}
             onClick={() => setView("compras")}
           >
             {t("Mis Compras")}
           </button>
 
           <button className={`capitalize text-2xl font-medium px-4 py-2 rounded-xl mb-4
-            ${view === "editar" ? "text-gray-900 dark:text-gray-100 cursor-text select-text" : "transition duration-150 hover:scale-105 bg-gray-900 dark:bg-gray-200 text-gray-100 dark:text-gray-900"}`}
+            ${view === "editar" ? "text-gray-900 dark:text-gray-100 cursor-text select-text" : "transition duration-150 hover:scale-105 bg-gray-900 hover:bg-gray-700 dark:bg-gray-200 dark:hover:bg-gray-400 text-gray-100 dark:text-gray-900"}`}
             onClick={() => setView("editar")}
           >
             {t("Editar")}
@@ -211,8 +220,8 @@ const handleUpdateProfile = async () => {
         {view === "editar" ? (
           <div className="space-y-4">
             <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="text" label={t("Nombre")} value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electrónico")} value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contraseña")} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electr贸nico")} value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contrase帽a")} type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button color="green" onClick={handleUpdateProfile}>{t("Guardar cambios")}</Button>
           </div>
         ) : (
@@ -222,12 +231,16 @@ const handleUpdateProfile = async () => {
           {compras.length > 0 ? (
             compras.map((compra) => (
               <div key={compra.id} className="flex items-center from-gray-200 bg-gradient-to-bl dark:from-gray-700 p-5 rounded-lg shadow-md border hover:shadow-lg transition-all">
-                <img src={compra.producto?.imagen || "https://via.placeholder.com/100"} alt={compra.producto?.nombre} className="w-24 h-24 object-cover rounded-md" />
+                <img src={compra.imagen || "https://via.placeholder.com/100"} alt={compra.nombre} className="w-24 h-24 object-cover rounded-md" />
                 <div className="ml-5 flex-1 text-[13px] sm:text-[13px] md:text-[16px]">
-                  <h3 className="text-[14px] sm:text-lg md:text-lg lg:text-lg xl:text-lg font-semibold text-gray-900 dark:text-gray-100">{compra.producto?.nombre}</h3>
+                  <div className="flex">
+                    <h3 className="text-[14px] sm:text-lg md:text-lg lg:text-lg xl:text-lg font-extrabold text-gray-900 dark:text-gray-100">{t('Sección')}:</h3>
+                    <h3 className="ml-[10px] pt-[1px] text-[14px] sm:text-[16px] md:text-lg lg:text-lg xl:text-lg font-semibold text-gray-900 dark:text-gray-100">{compra.seccion}</h3>
+                  </div>
+                  <h2 className="text-[14px] sm:text-lg md:text-lg lg:text-lg xl:text-lg font-semibold text-gray-900 dark:text-gray-100">{compra.nombre}</h2>
                   <p className="text-gray-600 dark:text-gray-300">{compra.created_at.split("T")[0]}</p>
-                  <p className="text-gray-900 dark:text-gray-100">{t('Talla')} {compra.talla}</p>
-                  <p className="text-gray-900 dark:text-gray-100 font-bold">${compra.producto?.precio}</p>
+                  <p className="text-gray-900 dark:text-gray-100">{t('Talla')}: {compra.talla}</p>
+                  <p className="text-gray-900 dark:text-gray-100 font-bold">{compra.precio}</p>
                   {devoluciones[compra.id] ? (
                     <div className="mt-2">
                       <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
@@ -243,11 +256,11 @@ const handleUpdateProfile = async () => {
                       </p>
                       <div className="flex flex-col space-x-0 sm:space-x-2 sm:flex-row mt-2">
                         <Button className="text-[11px] sm:text-[12px]" size="sm" color="blue" onClick={() => handleEditDevolucion(compra)}>{t('Editar el Motivo')}</Button>
-                        <Button className="mt-2 sm:mt-0 text-[11px] sm:text-[12px]" size="sm" color="red" onClick={() => handleCancelDevolucion(compra.id)}>{t('Cancelar Devolución')}</Button>
+                        <Button className="mt-2 sm:mt-0 text-[11px] sm:text-[12px]" size="sm" color="red" onClick={() => handleCancelDevolucion(compra.id)}>{t('Cancelar Devoluci贸n')}</Button>
                       </div>
                     </div>
                   ) : (
-                    <Button className="text-[11px] sm:text-[12px] mt-2" size="sm" color="red" onClick={() => handleOpenModal(compra)}>{t('Devolución')}</Button>
+                    <Button className="text-[11px] sm:text-[12px] mt-2" size="sm" color="red" onClick={() => handleOpenModal(compra)}>{t('Devoluci贸n')}</Button>
                   )}
                 </div>
               </div>
@@ -258,21 +271,21 @@ const handleUpdateProfile = async () => {
         </div>
         )}
       </div>
-      <Dialog size="xs" open={showModal} handler={() => setShowModal(false)}>
-        <Card className="mx-auto w-full max-w-[24rem]">
+      <Dialog size="xs" open={showModal} handler={() => setShowModal(false)} className="bg-transparent shadow-none">
+        <Card className="mx-auto w-full max-w-[24rem] bg-gray-100 dark:bg-blue-gray-900">
           <CardBody className="flex flex-col items-center">
             {!showMotivoInput ? (
               <>
                 <Typography variant="h4" className="text-red-600 text-center">
                   {cancelCompraId 
-                    ? t('¿Seguro que quieres cancelar la devolución?') 
-                    : t('¿Seguro que quieres devolver este producto?')
+                    ? t('驴Seguro que quieres cancelar la devoluci贸n?') 
+                    : t('驴Seguro que quieres devolver este producto?')
                   }
                 </Typography>
-                <Typography className="mb-3 font-normal text-center text-gray-700">{selectedCompra?.producto?.nombre || "Producto desconocido"}</Typography>
+                <Typography className="mb-3 font-normal text-center text-gray-700 dark:text-gray-300">{selectedCompra?.nombre || ""}</Typography>
                 <div className="flex justify-between w-full mt-4">
                 <Button className="text-[11px]" color="red" onClick={cancelCompraId ? handleConfirmCancelDevolucion : handleConfirmDevolucion}>
-                  {t('Sí, estoy seguro')}
+                  {t('S铆, estoy seguro')}
                 </Button>
                   <Button className="text-[11px]" color="gray" onClick={() => setShowModal(false)}>
                     {cancelCompraId ? t('No quiero cancelar') : t('No quiero devolver')}
@@ -281,8 +294,8 @@ const handleUpdateProfile = async () => {
               </>
             ) : (
               <>
-                <Typography variant="h5" className="text-gray-800 font-extrabold">{t('Motivo de la devolución')}</Typography>
-                <Input label={t('Motivo')} value={motivo} onChange={(e) => { setMotivo(e.target.value); setErrorMotivo(""); }} className="w-full" disabled={loading} />
+                <Typography variant="h5" className="text-gray-800 dark:text-gray-200 font-extrabold">{t('Motivo de la devoluci贸n')}</Typography>
+                <Input color="blue-gray" className="text-gray-900 dark:text-gray-100 w-full" type="text" label={t('Motivo')} value={motivo} onChange={(e) => { setMotivo(e.target.value); setErrorMotivo(""); }} disabled={loading} />
                 {errorMotivo && <Typography className="text-red-600 text-sm mt-2">{errorMotivo}</Typography>}
                 <div className="flex justify-between w-full mt-4">
                   <Button color="green" onClick={selectedCompra && devoluciones[selectedCompra.id] ? handleUpdateDevolucion : handleEnviarDevolucion} disabled={loading}>
