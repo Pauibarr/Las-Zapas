@@ -80,9 +80,9 @@ export const GlobalProvider = ({ children }) => {
                 .from("Usuarios")
                 .select("role, name_user")
                 .eq("uid", uid)
-                .single()
-            if (error) throw error
-            setIsAdmin(data.role === "admin")
+                .single();
+            if (error) throw error;
+            setIsAdmin(data.role === "admin");
             setSession((prevSession) => ({
                 ...prevSession,
                 user: {
@@ -174,8 +174,23 @@ export const GlobalProvider = ({ children }) => {
 
     //Compras
 
-    const fetchCompras = async (userId) => {
+    const fetchCompras = async (userIdentifier) => {
         try {
+            let userId = userIdentifier;
+    
+            // Si el `userId` no tiene formato UUID, buscar el UID en la base de datos
+            if (!userId.match(/^[0-9a-fA-F-]{36}$/)) {
+                const { data, error } = await supabase
+                    .from("Usuarios")
+                    .select("uid")
+                    .eq("name_user", userId)
+                    .single();
+    
+                if (error) throw error;
+                userId = data.uid; // Ahora tenemos el UID correcto
+            }
+    
+            // Ahora sí hacemos la consulta con el UID correcto
             const { data: compras, error } = await supabase
                 .from("Compras")
                 .select("id, created_at, puid, nombre, imagen, precio, tabla_producto, talla, seccion")
@@ -189,6 +204,7 @@ export const GlobalProvider = ({ children }) => {
             setError(error.message);
         }
     };
+    
     
     /////////////////
 
@@ -358,6 +374,7 @@ export const GlobalProvider = ({ children }) => {
             setCompras,
             fetchCompras,
             errorSubmit,
+            setError,
             setErrorSubmit,
             zapass,
             setZapass,

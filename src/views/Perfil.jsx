@@ -10,7 +10,7 @@ export function Perfil() {
 
   const { t } = useTranslation();
 
-  const { compras, setCompras, session, setSession, fetchCompras, fetchUserData } = useGlobalContext();
+  const { compras, setCompras, session, setSession, fetchCompras, fetchUserData, setError } = useGlobalContext();
   const [selectedCompra, setSelectedCompra] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [motivo, setMotivo] = useState("");
@@ -25,8 +25,9 @@ export function Perfil() {
   const [email, setEmail] = useState(session?.user?.email || "");
   const [nombre, setNombre] = useState("");
   const [password, setPassword] = useState("");
+  const [usuario, setUsuario] = useState(null)
   const { id } = useParams(); // Obtiene el id desde la URL
-  const userId = id || session?.user?.id; // Usa el id de la URL o el de la sesi贸n si no hay id
+  const userId = id || session?.user?.id; // Usa el id de la URL o el de la sesión si no hay id
 
  
 // Guardar en localStorage cuando cambia la vista
@@ -43,6 +44,54 @@ useEffect(() => {
 
     fetchCompras(userId);
 }, [userId]);
+
+useEffect(() => {
+    setUsuario(null);
+
+    const fetchUsuario = async () => {
+        try {
+            if (!id) {
+                setUsuario({
+                    uid: session?.user?.id,
+                    name_user: session?.user?.user_metadata?.name || "Usuario",
+                });
+                return;
+            }
+
+            // Si `id` no es un UUID, asumimos que es `name_user`
+            let userId = id;
+            if (!id.match(/^[0-9a-fA-F-]{36}$/)) {
+                const { data, error } = await supabase
+                    .from("Usuarios")
+                    .select("uid, name_user")
+                    .eq("name_user", id) // Buscar por nombre de usuario
+                    .single();
+
+                if (error) throw error;
+                userId = data.uid; // Obtener el UID real
+            }
+
+            // Buscar el usuario con el UID correcto
+            const { data, error } = await supabase
+                .from("Usuarios")
+                .select("uid, name_user")
+                .eq("uid", userId)
+                .single();
+
+            if (error) throw error;
+            setUsuario(data);
+
+            // Cambiar la URL visible sin recargar la página
+            window.history.replaceState(null, "", `/perfil/${data.name_user}`);
+        } catch (error) {
+            console.error("Error fetching user:", error.message);
+            setError(error.message);
+        }
+    };
+
+    fetchUsuario();
+}, [id, session]);
+
 
 const handleUpdateProfile = async () => {
   if (!email.trim() || !nombre.trim()) {
@@ -61,7 +110,7 @@ const handleUpdateProfile = async () => {
         userId: session.user.id,
         nombre,
         email,
-        password: password || undefined, // Solo lo manda si hay contrase帽a
+        password: password || undefined, // Solo lo manda si hay contraseña
       }),
     });
 
@@ -70,18 +119,17 @@ const handleUpdateProfile = async () => {
       throw new Error(result.error || "Error al actualizar perfil");
     }
 
-    // 馃敼 Actualizar sesi贸n con el nuevo correo y nombre
+    // 🔹 Actualizar sesión con el nuevo correo y nombre
     setSession((prevSession) => ({
       ...prevSession,
       user: {
         ...prevSession.user,
         email,
-        nombre,
         user_metadata: { ...prevSession.user.user_metadata, name: nombre },
       },
     }));
 
-    // 馃敼 Volver a obtener los datos desde la base de datos
+    // 🔹 Volver a obtener los datos desde la base de datos
     await fetchUserData(session.user.id);
 
     showAlert(t("Perfil actualizado"), "green");
@@ -114,11 +162,11 @@ const handleUpdateProfile = async () => {
 
   const handleConfirmDevolucion = () => {
     if (cancelCompraId) {
-      // Si estamos cancelando una devoluci贸n, simplemente cerramos el modal
+      // Si estamos cancelando una devolución, simplemente cerramos el modal
       setShowModal(false);
       setCancelCompraId(null); // Reseteamos el estado
     } else {
-      // Si estamos haciendo una devoluci贸n nueva, pedimos el motivo
+      // Si estamos haciendo una devolución nueva, pedimos el motivo
       setShowMotivoInput(true);
     }
   };
@@ -182,7 +230,7 @@ const handleUpdateProfile = async () => {
   
       if (error) throw error;
   
-      // Eliminar la devoluci贸n del estado
+      // Eliminar la devolución del estado
       const updatedDevoluciones = { ...devoluciones };
       delete updatedDevoluciones[cancelCompraId];
       setDevoluciones(updatedDevoluciones);
@@ -201,7 +249,15 @@ const handleUpdateProfile = async () => {
   return (
     <div className="min-h-screen bg-gradient-to-bl from-gray-200 dark:from-gray-800 p-6 pt-24 pb-20 flex justify-center items-center">
       <div className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-2xl rounded-lg p-8 border border-gray-200 dark:border-gray-600">
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 border-b pb-4 mb-6">{t('Perfil')}</h1>
+        <div className="flex justify-between border-b pb-4 mb-6">
+          <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 ">{t('Perfil')}</h1>
+          {/* Mostrar el nombre del usuario si existe */}
+            {usuario && usuario.uid !== session?.user?.id ? (
+                    <h2 className="text-3xl font-semibold text-gray-700 dark:text-gray-300">
+                        {usuario.name_user}
+                    </h2>
+              ) : null}
+        </div>
         <div className="flex justify-between">
           <button className={`capitalize text-2xl font-medium px-4 py-2 rounded-xl mb-4 
             ${view === "compras" ? "text-gray-900 dark:text-gray-100 cursor-text select-text" : "transition duration-150 hover:scale-105 bg-gray-900 hover:bg-gray-700 dark:bg-gray-200 dark:hover:bg-gray-400 text-gray-100 dark:text-gray-900"}`}
@@ -221,8 +277,8 @@ const handleUpdateProfile = async () => {
         {view === "editar" ? (
           <div className="space-y-4">
             <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="text" label={t("Nombre")} placeholder={session?.user?.user_metadata?.name} value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electrónico")} value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contraseña")} type="password" placeholder={session?.user?.user_metadata?.password ? "*".repeat(session.user.user_metadata.password.length) : "************************************************"} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" type="email" label={t("Correo electrónico")} placeholder={session?.user?.email} value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input color="blue-gray" className="text-gray-900 dark:text-gray-100" label={t("Nueva contraseña")} type="password" placeholder="****" value={password} onChange={(e) => setPassword(e.target.value)} />
             <Button color="green" onClick={handleUpdateProfile}>{t("Guardar cambios")}</Button>
           </div>
         ) : (
@@ -279,8 +335,8 @@ const handleUpdateProfile = async () => {
               <>
                 <Typography variant="h4" className="text-red-600 text-center">
                   {cancelCompraId 
-                    ? t('驴Seguro que quieres cancelar la devolución?') 
-                    : t('驴Seguro que quieres devolver este producto?')
+                    ? t('¿Seguro que quieres cancelar la devolución?') 
+                    : t('¿Seguro que quieres devolver este producto?')
                   }
                 </Typography>
                 <Typography className="mb-3 font-normal text-center text-gray-700 dark:text-gray-300">{selectedCompra?.nombre || ""}</Typography>
