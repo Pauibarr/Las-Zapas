@@ -25,15 +25,7 @@ export default async function handler(req, res) {
       throw profileError;
     }
 
-    //  Actualizar el correo en Supabase Auth
-    const { data: userData, error: authError } = await supabase.auth.admin.updateUserById(userId, {
-      email,
-      password: password || undefined, // Solo actualiza si se envía
-    });
-
-    if (authError) {
-      throw authError;
-    }
+  
 
     return res.status(200).json({ message: "Perfil actualizado", userData });
   } catch (error) {
