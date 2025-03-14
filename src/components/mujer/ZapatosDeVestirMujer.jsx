@@ -57,8 +57,8 @@ export function ZapatosDeVestirMujer() {
                             
                             <h2 className="text-xl font-semibold mb-2 dark:text-white">{zapatoBota.nombre}</h2>
                             <div className="flex flex-col flex-grow">
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{t('Descripción')}: {zapatoBota.descripcion}</p>
-                                <p className="text-blue-gray-600 dark:text-blue-gray-100">{t('Precio')}: {zapatoBota.precio}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100 mb-2">{zapatoBota.descripcion}</p>
+                                <p className="text-blue-gray-600 dark:text-blue-gray-100">{zapatoBota.precio}</p>
                             </div>
                             {isAdmin && (
                                 <div className="mt-4 flex justify-between">
